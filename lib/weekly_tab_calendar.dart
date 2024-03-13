@@ -74,9 +74,21 @@ class _WeeklyTabCalendarState extends State<WeeklyTabCalendar> with TickerProvid
   }
 
   Widget _buildTabBar(DateTime date) {
+    final isSelectedWeek = date.isSameWeek(widget.controller.position);
+    final labelColor = isSelectedWeek
+        ? null
+        : Theme.of(context).tabBarTheme.unselectedLabelColor ??
+            Theme.of(context).colorScheme.onSurfaceVariant;
+    final labelStyle = isSelectedWeek
+        ? null
+        : Theme.of(context).tabBarTheme.unselectedLabelStyle ??
+            Theme.of(context).textTheme.titleSmall;
+
     return TabBar(
       controller: widget.tabController,
       indicator: date.isSameWeek(widget.controller.position) ? null : const BoxDecoration(),
+      labelColor: labelColor,
+      labelStyle: labelStyle,
       tabs: List.generate(
         widget.weekdays.length,
         (index) => widget.tabBuilder(context, _indexToDate(date, index)),

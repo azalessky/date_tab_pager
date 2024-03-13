@@ -21,7 +21,9 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
       home: Scaffold(
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
             children: [
