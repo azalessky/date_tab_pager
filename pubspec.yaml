@@ -1,7 +1,13 @@
 name: weekly_tab_pager
-description: "A new Flutter package project."
+description: A scrollable TabBar with attached TabView showing weekdays.
 version: 0.0.1
-homepage:
+homepage: http://indentix.com
+topics:
+  - scrollable
+  - tabs
+  - weekdays
+  - calendar
+  - navigation
 
 environment:
   sdk: '>=3.3.1 <4.0.0'
