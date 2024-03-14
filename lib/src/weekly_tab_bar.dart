@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'date_time_extension.dart';
 import 'weekly_tab_controller.dart';
 
-class WeeklyTabCalendar extends StatefulWidget implements PreferredSizeWidget {
+class WeeklyTabBar extends StatefulWidget implements PreferredSizeWidget {
   static const widgetHeight = 70.0;
   static const animationDuration = Duration(milliseconds: 250);
   static const animationCurve = Curves.easeInOut;
@@ -12,12 +12,12 @@ class WeeklyTabCalendar extends StatefulWidget implements PreferredSizeWidget {
   final TabController tabController;
   final List<int> weekdays;
   final int weekCount;
-  final Widget Function(BuildContext, DateTime) tabBuilder;
+  final Widget Function(BuildContext context, DateTime date) tabBuilder;
   final ScrollPhysics? scrollPhysics;
-  final Function(DateTime)? onTabScrolled;
-  final Function(DateTime)? onTabChanged;
+  final Function(DateTime date)? onTabScrolled;
+  final Function(DateTime date)? onTabChanged;
 
-  const WeeklyTabCalendar({
+  const WeeklyTabBar({
     required this.controller,
     required this.tabController,
     required this.weekdays,
@@ -30,13 +30,13 @@ class WeeklyTabCalendar extends StatefulWidget implements PreferredSizeWidget {
   });
 
   @override
-  State<WeeklyTabCalendar> createState() => _WeeklyTabCalendarState();
+  State<WeeklyTabBar> createState() => _WeeklyTabBarState();
 
   @override
   Size get preferredSize => const Size.fromHeight(widgetHeight);
 }
 
-class _WeeklyTabCalendarState extends State<WeeklyTabCalendar> with TickerProviderStateMixin {
+class _WeeklyTabBarState extends State<WeeklyTabBar> with TickerProviderStateMixin {
   late DateTime centerPosition;
   late int centerIndex;
   late PageController pageController;
@@ -63,7 +63,7 @@ class _WeeklyTabCalendarState extends State<WeeklyTabCalendar> with TickerProvid
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: WeeklyTabCalendar.widgetHeight,
+      height: WeeklyTabBar.widgetHeight,
       child: PageView.builder(
         controller: pageController,
         itemCount: widget.weekCount * 2,
@@ -107,8 +107,8 @@ class _WeeklyTabCalendarState extends State<WeeklyTabCalendar> with TickerProvid
     if (pageController.hasClients) {
       pageController.animateToPage(
         week,
-        duration: WeeklyTabCalendar.animationDuration,
-        curve: WeeklyTabCalendar.animationCurve,
+        duration: WeeklyTabBar.animationDuration,
+        curve: WeeklyTabBar.animationCurve,
       );
     }
     setState(() => widget.tabController.index = index);

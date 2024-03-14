@@ -1,25 +1,23 @@
-library weekly_tab_view;
-
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:weekly_tab_view/weekly_tab_controller.dart';
 
-import 'weekly_tab_calendar.dart';
-import 'weekly_tab_paginator.dart';
+import 'weekly_tab_controller.dart';
+import 'weekly_tab_bar.dart';
+import 'weekly_tab_view.dart';
 
-class WeeklyTabView extends StatefulWidget {
+class WeeklyTabNavigator extends StatefulWidget {
   final WeeklyTabController controller;
   final List<int> weekdays;
   final int weekCount;
-  final Widget Function(BuildContext, DateTime) tabBuilder;
-  final Widget Function(BuildContext, DateTime) pageBuilder;
+  final Widget Function(BuildContext context, DateTime date) tabBuilder;
+  final Widget Function(BuildContext context, DateTime date) pageBuilder;
   final ScrollPhysics? scrollPhysics;
-  final Function(DateTime)? onTabScrolled;
-  final Function(DateTime)? onTabChanged;
-  final Function(DateTime)? onPageChanged;
+  final Function(DateTime date)? onTabScrolled;
+  final Function(DateTime date)? onTabChanged;
+  final Function(DateTime date)? onPageChanged;
 
-  const WeeklyTabView({
+  const WeeklyTabNavigator({
     required this.controller,
     required this.weekdays,
     required this.weekCount,
@@ -33,32 +31,33 @@ class WeeklyTabView extends StatefulWidget {
   });
 
   @override
-  State<WeeklyTabView> createState() => _WeeklyTabViewState();
+  State<WeeklyTabNavigator> createState() => _WeeklyTabNavigatorState();
 }
 
-class _WeeklyTabViewState extends State<WeeklyTabView> with SingleTickerProviderStateMixin {
-  late WeeklyTabController calendarController;
-  late WeeklyTabController paginatorController;
+class _WeeklyTabNavigatorState extends State<WeeklyTabNavigator>
+    with SingleTickerProviderStateMixin {
+  late WeeklyTabController tabBarController;
+  late WeeklyTabController tabViewController;
   late TabController tabController;
 
   @override
   void initState() {
     super.initState();
 
-    widget.controller.setPosition(_calcSafeDate(widget.controller.position));
-    widget.controller.addListener(_updatePosition);
-
     tabController = TabController(length: widget.weekdays.length, vsync: this);
-    calendarController = WeeklyTabController(position: widget.controller.position);
-    paginatorController = WeeklyTabController(position: widget.controller.position);
+    tabBarController = WeeklyTabController(position: widget.controller.position);
+    tabViewController = WeeklyTabController(position: widget.controller.position);
+
+    widget.controller.addListener(_updatePosition);
+    widget.controller.animateTo(widget.controller.position);
   }
 
   @override
   void dispose() {
     widget.controller.removeListener(_updatePosition);
     tabController.dispose();
-    calendarController.dispose();
-    paginatorController.dispose();
+    tabBarController.dispose();
+    tabViewController.dispose();
     super.dispose();
   }
 
@@ -66,29 +65,29 @@ class _WeeklyTabViewState extends State<WeeklyTabView> with SingleTickerProvider
   Widget build(BuildContext context) {
     return Column(
       children: [
-        WeeklyTabCalendar(
-          controller: calendarController,
+        WeeklyTabBar(
+          controller: tabBarController,
           tabController: tabController,
           weekdays: widget.weekdays,
           weekCount: widget.weekCount,
           tabBuilder: widget.tabBuilder,
           onTabScrolled: widget.onTabScrolled,
           onTabChanged: (value) {
-            paginatorController.animateTo(value);
+            tabViewController.animateTo(value);
             widget.controller.setPosition(value);
             widget.onTabChanged?.call(value);
           },
         ),
         Expanded(
-          child: WeeklyTabPaginator(
-            controller: paginatorController,
+          child: WeeklyTabView(
+            controller: tabViewController,
             tabController: tabController,
             weekdays: widget.weekdays,
             weekCount: widget.weekCount,
             pageBuilder: (context, date) => widget.pageBuilder(context, date),
             scrollPhysics: widget.scrollPhysics,
             onPageChanged: (value) {
-              calendarController.animateTo(value);
+              tabBarController.animateTo(value);
               widget.controller.setPosition(value);
               widget.onPageChanged?.call(value);
             },
@@ -99,8 +98,11 @@ class _WeeklyTabViewState extends State<WeeklyTabView> with SingleTickerProvider
   }
 
   void _updatePosition() {
-    calendarController.animateTo(widget.controller.position);
-    paginatorController.animateTo(widget.controller.position);
+    final position = _calcSafeDate(widget.controller.position);
+    widget.controller.setPosition(position);
+
+    tabBarController.animateTo(position);
+    tabViewController.animateTo(position);
   }
 
   DateTime _calcSafeDate(DateTime date) {

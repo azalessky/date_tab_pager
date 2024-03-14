@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 
-import 'package:weekly_tab_view/date_time_extension.dart';
-
+import 'date_time_extension.dart';
 import 'weekly_tab_controller.dart';
 
-class WeeklyTabPaginator extends StatefulWidget {
+class WeeklyTabView extends StatefulWidget {
   final WeeklyTabController controller;
   final TabController tabController;
   final List<int> weekdays;
   final int weekCount;
-  final Widget Function(BuildContext, DateTime) pageBuilder;
+  final Widget Function(BuildContext context, DateTime date) pageBuilder;
   final ScrollPhysics? scrollPhysics;
-  final Function(DateTime)? onPageChanged;
+  final Function(DateTime date)? onPageChanged;
 
-  const WeeklyTabPaginator({
+  const WeeklyTabView({
     required this.controller,
     required this.tabController,
     required this.weekdays,
@@ -25,10 +24,10 @@ class WeeklyTabPaginator extends StatefulWidget {
   });
 
   @override
-  State<WeeklyTabPaginator> createState() => _WeeklyTabPaginatorState();
+  State<WeeklyTabView> createState() => _WeeklyTabViewState();
 }
 
-class _WeeklyTabPaginatorState extends State<WeeklyTabPaginator> with TickerProviderStateMixin {
+class _WeeklyTabViewState extends State<WeeklyTabView> with TickerProviderStateMixin {
   late DateTime centerPosition;
   late int centerIndex;
   late TabController tabController;

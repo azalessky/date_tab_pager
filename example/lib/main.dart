@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:weekly_tab_view/weekly_tab_controller.dart';
-import 'package:weekly_tab_view/weekly_tab_view.dart';
+import 'package:weekly_tab_pager/weekly_tab_pager.dart';
 
 void main() => runApp(const MainApp());
 
@@ -28,7 +27,7 @@ class _MainAppState extends State<MainApp> {
           child: Column(
             children: [
               Expanded(
-                child: WeeklyTabView(
+                child: WeeklyTabNavigator(
                   controller: controller,
                   weekdays: weekdays,
                   weekCount: weekCount,
