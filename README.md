@@ -1,39 +1,86 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+## Weekly Tab Pager
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+A scrollable TabBar with attached TabView showing weekdays.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+![demo](demo.gif)
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+    * TabBar and TabView connected together
+    * Single controller for navigation
+    * Smooth animiaton during scrolling
+    * Infinite scrolling in both directions 
+    * Specified days of week in tabs
+    * Callbacks for tab/page changes
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Add the following line to `pubspec.yaml`:
 
+```yaml
+dependencies:
+  weekly_tab_pager: ^0.0.1
+```
+Import the package in your code:
 ```dart
-const like = 'sample';
+import 'package:weekly_tab_pager/weekly_tab_pager.dart';
 ```
 
-## Additional information
+Declare a controller for navigation:
+```dart
+final controller = WeeklyTabController(position: DateTime.now());
+```
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Define how tabs will be built:
+```dart
+Widget _buildTab(BuildContext context, DateTime date) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(DateFormat('E').format(date).toUpperCase()),
+      const SizedBox(height: 4),
+      Text(date.day.toString()),
+    ],
+  );
+}
+```
+
+Define how pages will be built:
+```dart
+Widget _buildPage(BuildContext context, DateTime date) {
+  return Card(
+    margin: const EdgeInsets.all(24),
+    child: Center(
+      child: Text(
+        DateFormat.yMMMMd().format(date),
+        style: Theme.of(context).textTheme.titleLarge,
+      ),
+    ),
+  );
+}
+```
+
+Add a navigator widget to your code:
+```dart
+WeeklyTabNavigator(
+  controller: controller,
+  weekdays: [1, 2, 3, 4, 5],
+  weekCount: 1000,
+  tabBuilder: (context, date) => _buildTab(context, date),
+  pageBuilder: (context, date) => _buildPage(context, date),
+),
+```
+
+Use a controller to navigate to the specific date:
+```dart
+  controller.animateTo(DateTime.now());
+```
+
+Provide callbacks to listen navigator events:
+```dart
+  onTabScrolled: (date) => ...,
+  onTabChanged: (date) => ...,
+  onPageChanged: (date) => ...,
+```
+
+Make sure to check out [example](https://github.com/npopok/weekly_tab_pager/tree/main/example) for more details.

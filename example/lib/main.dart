@@ -20,6 +20,7 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
       home: Scaffold(
         backgroundColor: Colors.white,
@@ -44,7 +45,7 @@ class _MainAppState extends State<MainApp> {
                 onPressed: _resetPosition,
                 child: const Text('Reset Position'),
               ),
-              const SizedBox(height: 64),
+              const SizedBox(height: 200),
             ],
           ),
         ),
