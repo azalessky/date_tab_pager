@@ -55,7 +55,6 @@ class _WeeklyTabNavigatorState extends State<WeeklyTabNavigator>
   @override
   void dispose() {
     widget.controller.removeListener(_updatePosition);
-    widget.controller.dispose();
     tabController.dispose();
     tabBarController.dispose();
     tabViewController.dispose();
