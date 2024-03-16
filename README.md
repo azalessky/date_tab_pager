@@ -2,16 +2,16 @@
 
 A scrollable TabBar with attached TabView showing weekdays.
 
-![demo](demo.gif)
+![demo](https://github.com/npopok/weekly_tab_pager/blob/main/demo.gif)
 
 ## Features
 
-    * TabBar and TabView connected together
-    * Single controller for navigation
-    * Smooth animiaton during scrolling
-    * Infinite scrolling in both directions 
-    * Specified days of week in tabs
-    * Callbacks for tab/page changes
+ - TabBar and TabView connected together
+ - Single controller for navigation
+ - Smooth animiaton during scrolling
+ - Infinite scrolling in both directions 
+ - Specified days of week in tabs
+ - Callbacks for tab/page changes
 
 ## Usage
 
