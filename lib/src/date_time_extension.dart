@@ -3,7 +3,8 @@ extension DateTimeExtension on DateTime {
         days: days[0] - weekday,
       ));
 
-  bool isSameDay(DateTime other) => year == other.year && month == other.month && day == other.day;
+  bool isSameDay(DateTime other) =>
+      year == other.year && month == other.month && day == other.day;
 
   bool isSameWeek(DateTime other) =>
       DateTime(year, month, day - weekday) ==
@@ -12,7 +13,9 @@ extension DateTimeExtension on DateTime {
   int differenceInWeeks(DateTime other) {
     final diff = differenceInDays(other);
     final days = weekday - other.weekday;
-    final weeks = diff ~/ 7 + (diff < 0 && days > 0 ? -1 : 0) + (diff > 0 && days < 0 ? 1 : 0);
+    final weeks = diff ~/ 7 +
+        (diff < 0 && days > 0 ? -1 : 0) +
+        (diff > 0 && days < 0 ? 1 : 0);
     return weeks;
   }
 

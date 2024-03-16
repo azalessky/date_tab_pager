@@ -36,7 +36,8 @@ class WeeklyTabBar extends StatefulWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(widgetHeight);
 }
 
-class _WeeklyTabBarState extends State<WeeklyTabBar> with TickerProviderStateMixin {
+class _WeeklyTabBarState extends State<WeeklyTabBar>
+    with TickerProviderStateMixin {
   late DateTime centerPosition;
   late int centerIndex;
   late PageController pageController;
@@ -68,7 +69,8 @@ class _WeeklyTabBarState extends State<WeeklyTabBar> with TickerProviderStateMix
         controller: pageController,
         itemCount: widget.weekCount * 2,
         itemBuilder: (context, index) => _buildTabBar(_weekToDate(index)),
-        onPageChanged: (index) => widget.onTabScrolled?.call(_weekToDate(index)),
+        onPageChanged: (index) =>
+            widget.onTabScrolled?.call(_weekToDate(index)),
       ),
     );
   }
@@ -86,7 +88,9 @@ class _WeeklyTabBarState extends State<WeeklyTabBar> with TickerProviderStateMix
 
     return TabBar(
       controller: widget.tabController,
-      indicator: date.isSameWeek(widget.controller.position) ? null : const BoxDecoration(),
+      indicator: date.isSameWeek(widget.controller.position)
+          ? null
+          : const BoxDecoration(),
       labelColor: labelColor,
       labelStyle: labelStyle,
       tabs: List.generate(

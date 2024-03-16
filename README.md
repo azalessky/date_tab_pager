@@ -1,6 +1,6 @@
 ## Weekly Tab Pager
 
-A scrollable TabBar with attached TabView showing weekdays.
+Customizable TabBar component with integrated TabView that displays weekdays and allows for infinite scrolling by week.
 
 ![demo](https://github.com/npopok/weekly_tab_pager/blob/main/demo.gif)
 
