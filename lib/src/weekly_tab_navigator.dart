@@ -32,6 +32,22 @@ class WeeklyTabNavigator extends StatefulWidget {
 
   @override
   State<WeeklyTabNavigator> createState() => _WeeklyTabNavigatorState();
+
+  static DateTime calcSafeDate(DateTime date, List<int> weekdays) {
+    int min = weekdays.reduce(math.min);
+    int max = weekdays.reduce(math.max);
+    int day = date.weekday;
+
+    if (day < min) {
+      return date.add(Duration(days: min - day));
+    } else if (day > max) {
+      return date.add(Duration(days: min - day + 7));
+    } else if (!weekdays.contains(day)) {
+      int next = weekdays.where((e) => e > day).first;
+      return date.add(Duration(days: next - day));
+    }
+    return date;
+  }
 }
 
 class _WeeklyTabNavigatorState extends State<WeeklyTabNavigator>
@@ -98,26 +114,12 @@ class _WeeklyTabNavigatorState extends State<WeeklyTabNavigator>
   }
 
   void _updatePosition() {
-    final position = _calcSafeDate(widget.controller.position);
+    final position = WeeklyTabNavigator.calcSafeDate(
+      widget.controller.position,
+      widget.weekdays,
+    );
     widget.controller.setPosition(position);
-
     tabBarController.animateTo(position);
     tabViewController.animateTo(position);
-  }
-
-  DateTime _calcSafeDate(DateTime date) {
-    int min = widget.weekdays.reduce(math.min);
-    int max = widget.weekdays.reduce(math.max);
-    int day = date.weekday;
-
-    if (day < min) {
-      return date.add(Duration(days: min - day));
-    } else if (day > max) {
-      date = date.add(Duration(days: min - day + 7));
-    } else if (!widget.weekdays.contains(day)) {
-      int next = widget.weekdays.where((e) => e > day).first;
-      return date.add(Duration(days: next - day));
-    }
-    return date;
   }
 }
