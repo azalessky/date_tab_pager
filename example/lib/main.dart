@@ -34,7 +34,6 @@ class _MainAppState extends State<MainApp> {
                   weekCount: weekCount,
                   tabBuilder: (context, date) => _buildTab(context, date),
                   pageBuilder: (context, date) => _buildPage(context, date),
-                  scrollPhysics: const PaginatorScrollPhysics(),
                   onTabScrolled: (value) => debugPrint('onTabScrolled: $value'),
                   onTabChanged: (value) => debugPrint('onTabChanged: $value'),
                   onPageChanged: (value) => debugPrint('onPageChanged: $value'),
@@ -42,7 +41,7 @@ class _MainAppState extends State<MainApp> {
               ),
               const SizedBox(height: 24),
               FilledButton(
-                onPressed: _resetPosition,
+                onPressed: () => controller.animateTo(DateTime.now()),
                 child: const Text('Reset Position'),
               ),
               const SizedBox(height: 200),
@@ -75,24 +74,4 @@ class _MainAppState extends State<MainApp> {
       ),
     );
   }
-
-  void _resetPosition() {
-    setState(() => controller.animateTo(DateTime.now()));
-  }
-}
-
-class PaginatorScrollPhysics extends ScrollPhysics {
-  const PaginatorScrollPhysics({super.parent});
-
-  @override
-  PaginatorScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return PaginatorScrollPhysics(parent: buildParent(ancestor)!);
-  }
-
-  @override
-  SpringDescription get spring => const SpringDescription(
-        mass: 40,
-        stiffness: 100,
-        damping: 1,
-      );
 }
