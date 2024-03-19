@@ -15,13 +15,22 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   final weekdays = [1, 2, 3, 4, 5];
   final weekCount = 100;
-  final controller = WeeklyTabController(position: DateTime.now());
+  late DateTime startDate;
+  late WeeklyTabController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    startDate = WeeklyTabNavigator.calcSafeDate(DateTime.now(), weekdays);
+    controller = WeeklyTabController(position: startDate);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
+      theme: ThemeData(
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
       home: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -41,7 +50,7 @@ class _MainAppState extends State<MainApp> {
               ),
               const SizedBox(height: 24),
               FilledButton(
-                onPressed: () => controller.animateTo(DateTime.now()),
+                onPressed: () => controller.animateTo(startDate),
                 child: const Text('Reset Position'),
               ),
               const SizedBox(height: 200),

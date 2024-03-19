@@ -5,7 +5,7 @@ import 'weekly_tab_controller.dart';
 
 class WeeklyTabBar extends StatefulWidget implements PreferredSizeWidget {
   static const widgetHeight = 70.0;
-  static const animationDuration = Duration(milliseconds: 250);
+  static const animationDuration = Duration(milliseconds: 300);
   static const animationCurve = Curves.easeInOut;
 
   final WeeklyTabController controller;
@@ -115,7 +115,7 @@ class _WeeklyTabBarState extends State<WeeklyTabBar>
         curve: WeeklyTabBar.animationCurve,
       );
     }
-    setState(() => widget.tabController.index = index);
+    widget.tabController.index = index;
   }
 
   DateTime _indexToDate(DateTime position, int index) {

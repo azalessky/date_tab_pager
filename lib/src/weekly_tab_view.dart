@@ -75,20 +75,18 @@ class _WeeklyTabViewState extends State<WeeklyTabView> with TickerProviderStateM
   }
 
   void _syncTabIndex() {
-    // if (!widget.tabController.indexIsChanging) {
     final date = _pageToDate(tabController.index - centerIndex);
     widget.onPageChanged?.call(date);
-    // }
   }
 
   void _syncTabOffset() {
     final index = widget.tabController.index;
     final offset = tabController.offset;
 
-    if (!widget.tabController.indexIsChanging && offset <= 1 && offset >= -1) {
+    if (!widget.tabController.indexIsChanging && offset < 1 && offset > -1) {
       if (index == 0 && offset < 0) return;
       if (index == widget.tabController.length - 1 && offset > 0) return;
-      widget.tabController.offset = tabController.offset;
+      widget.tabController.offset = offset;
     }
   }
 
