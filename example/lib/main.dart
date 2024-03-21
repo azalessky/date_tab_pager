@@ -13,7 +13,7 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  final weekdays = [1, 2, 3, 4, 5];
+  final weekdays = [2, 3, 4, 5, 6];
   final weekCount = 100;
   late DateTime startDate;
   late WeeklyTabController controller;
@@ -29,8 +29,7 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
+      theme: ThemeData(colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
       home: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
