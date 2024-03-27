@@ -1,3 +1,7 @@
+## 0.0.4
+
+- Fixed issues reported by pub.dev.
+
 ## 0.0.3
 
 - Fixed issue when week starts not from Monday.

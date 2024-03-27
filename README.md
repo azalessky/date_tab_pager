@@ -2,7 +2,11 @@
 
 Customizable TabBar component with integrated TabView that displays weekdays and allows for infinite scrolling by week.
 
- <img src="https://github.com/npopok/weekly_tab_pager/blob/main/demo.gif" height="400">
+This component is used in the real-world application Homework Planner (<a href="https://apps.apple.com/app/id6479202666">iOS</a>, <a href="https://play.google.com/store/apps/details?id=com.indentix.homeworkdiary">Android</a>).
+
+Feel free to use this library if you find it useful!
+
+ <img src="https://raw.githubusercontent.com/npopok/weekly_tab_pager/main/demo.gif" height="400"/>
 
 ## Features
 
@@ -19,7 +23,7 @@ Add the following line to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  weekly_tab_pager: ^0.0.2
+  weekly_tab_pager: ^0.0.4
 ```
 Import the package in your code:
 ```dart

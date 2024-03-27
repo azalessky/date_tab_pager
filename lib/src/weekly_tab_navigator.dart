@@ -60,12 +60,14 @@ class _WeeklyTabNavigatorState extends State<WeeklyTabNavigator>
   void initState() {
     super.initState();
 
+    final pos = widget.controller.position;
+
     tabController = TabController(length: widget.weekdays.length, vsync: this);
-    tabBarController = WeeklyTabController(position: widget.controller.position);
-    tabViewController = WeeklyTabController(position: widget.controller.position);
+    tabBarController = WeeklyTabController(position: pos);
+    tabViewController = WeeklyTabController(position: pos);
 
     widget.controller.addListener(_updatePosition);
-    widget.controller.animateTo(widget.controller.position);
+    widget.controller.animateTo(pos);
   }
 
   @override
