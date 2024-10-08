@@ -29,7 +29,8 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
+      theme: ThemeData(
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
       home: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(

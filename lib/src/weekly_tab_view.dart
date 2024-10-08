@@ -27,7 +27,8 @@ class WeeklyTabView extends StatefulWidget {
   State<WeeklyTabView> createState() => _WeeklyTabViewState();
 }
 
-class _WeeklyTabViewState extends State<WeeklyTabView> with TickerProviderStateMixin {
+class _WeeklyTabViewState extends State<WeeklyTabView>
+    with TickerProviderStateMixin {
   late DateTime centerPosition;
   late int centerIndex;
   late TabController tabController;
@@ -37,7 +38,8 @@ class _WeeklyTabViewState extends State<WeeklyTabView> with TickerProviderStateM
     super.initState();
 
     final itemCount = widget.weekCount * widget.weekdays.length;
-    final initialPage = widget.weekdays.indexOf(widget.controller.position.weekday);
+    final initialPage =
+        widget.weekdays.indexOf(widget.controller.position.weekday);
 
     centerPosition = widget.controller.position.weekStart(widget.weekdays);
     centerIndex = itemCount;
@@ -69,7 +71,8 @@ class _WeeklyTabViewState extends State<WeeklyTabView> with TickerProviderStateM
       physics: widget.scrollPhysics,
       children: List.generate(
         tabController.length,
-        (index) => widget.pageBuilder(context, _pageToDate(index - centerIndex)),
+        (index) =>
+            widget.pageBuilder(context, _pageToDate(index - centerIndex)),
       ),
     );
   }
@@ -97,7 +100,8 @@ class _WeeklyTabViewState extends State<WeeklyTabView> with TickerProviderStateM
 
   DateTime _pageToDate(int page) {
     final weekdays = widget.weekdays;
-    final weeks = page < 0 ? (page + 1) ~/ weekdays.length - 1 : page ~/ weekdays.length;
+    final weeks =
+        page < 0 ? (page + 1) ~/ weekdays.length - 1 : page ~/ weekdays.length;
     final day = weekdays[page % weekdays.length] + weeks * 7;
 
     return centerPosition.add(Duration(days: day - centerPosition.weekday));
@@ -106,8 +110,11 @@ class _WeeklyTabViewState extends State<WeeklyTabView> with TickerProviderStateM
   int _dateToPage(DateTime date) {
     final weekdays = widget.weekdays;
     final diff = date.differenceInDays(centerPosition);
-    final days = weekdays.indexOf(date.weekday) - weekdays.indexOf(centerPosition.weekday);
-    final weeks = diff ~/ 7 + (diff < 0 && days > 0 ? -1 : 0) + (diff > 0 && days < 0 ? 1 : 0);
+    final days = weekdays.indexOf(date.weekday) -
+        weekdays.indexOf(centerPosition.weekday);
+    final weeks = diff ~/ 7 +
+        (diff < 0 && days > 0 ? -1 : 0) +
+        (diff > 0 && days < 0 ? 1 : 0);
 
     return days + weekdays.length * weeks;
   }
