@@ -1,3 +1,7 @@
+## 0.0.5
+
+- Upgrade libraries.
+
 ## 0.0.4
 
 - Fixed issues reported by pub.dev.
