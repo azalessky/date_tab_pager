@@ -30,9 +30,9 @@ class _MainAppState extends State<MainApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue),
+      ),
       home: Scaffold(
-        backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
             children: [
@@ -74,6 +74,7 @@ class _MainAppState extends State<MainApp> {
 
   Widget _buildPage(BuildContext context, DateTime date) {
     return Card(
+      elevation: 8,
       margin: const EdgeInsets.all(24),
       child: Center(
         child: Text(

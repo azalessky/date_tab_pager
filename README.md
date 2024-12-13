@@ -87,4 +87,4 @@ Provide callbacks to listen navigator events:
   onPageChanged: (date) => ...,
 ```
 
-Make sure to check out [example](https://github.com/npopok/weekly_tab_pager/tree/main/example) for more details.
+Make sure to check out [example](https://github.com/azalessky/weekly_tab_pager/tree/main/example) for more details.
