@@ -212,10 +212,10 @@ packages:
     dependency: "direct main"
     description:
       name: weekly_tab_pager
-      sha256: "960de89ca2d37a9a01355bc23640585ae16717a804b4a1de57ff9230aefef52a"
+      sha256: "38a5fe4d8ff3c326899a4d51145e0d78535453fcbc5e10a9bdb36ad28b79bb95"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.5"
+    version: "0.0.6"
 sdks:
   dart: ">=3.4.0 <4.0.0"
   flutter: ">=3.18.0-18.0.pre.54"

@@ -9,8 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.19.0
-  weekly_tab_pager: ^0.0.5
+  intl: ^0.20.2
+  weekly_tab_pager: ^0.0.7
 
 dev_dependencies:
   flutter_test:
