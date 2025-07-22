@@ -10,12 +10,12 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.20.2
-  weekly_tab_pager: ^0.0.7
+  weekly_tab_pager: ^0.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true

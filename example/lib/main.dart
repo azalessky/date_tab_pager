@@ -13,7 +13,7 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  final weekdays = [2, 3, 4, 5, 6];
+  final weekdays = [1, 3, 5, 6, 7];
   final weekCount = 100;
   late DateTime startDate;
   late WeeklyTabController controller;
@@ -21,6 +21,7 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState() {
     super.initState();
+
     startDate = WeeklyTabNavigator.calcSafeDate(DateTime.now(), weekdays);
     controller = WeeklyTabController(position: startDate);
   }
@@ -41,8 +42,8 @@ class _MainAppState extends State<MainApp> {
                   controller: controller,
                   weekdays: weekdays,
                   weekCount: weekCount,
-                  tabBuilder: (context, date) => _buildTab(context, date),
-                  pageBuilder: (context, date) => _buildPage(context, date),
+                  tabBuilder: _buildTab,
+                  pageBuilder: _buildPage,
                   onTabScrolled: (value) => debugPrint('onTabScrolled: $value'),
                   onTabChanged: (value) => debugPrint('onTabChanged: $value'),
                   onPageChanged: (value) => debugPrint('onPageChanged: $value'),
@@ -62,7 +63,7 @@ class _MainAppState extends State<MainApp> {
   }
 
   Widget _buildTab(BuildContext context, DateTime date) {
-    return Column(
+    final child = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(DateFormat('E').format(date).toUpperCase()),
@@ -70,6 +71,13 @@ class _MainAppState extends State<MainApp> {
         Text(date.day.toString()),
       ],
     );
+
+    return date.weekday >= 6
+        ? DefaultTextStyle.merge(
+            style: const TextStyle(color: Colors.red),
+            child: child,
+          )
+        : child;
   }
 
   Widget _buildPage(BuildContext context, DateTime date) {

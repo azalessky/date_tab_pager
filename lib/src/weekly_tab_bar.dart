@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'date_time_extension.dart';
+import 'weelky_tab_types.dart';
 import 'weekly_tab_controller.dart';
 
 class WeeklyTabBar extends StatefulWidget implements PreferredSizeWidget {
@@ -12,10 +13,10 @@ class WeeklyTabBar extends StatefulWidget implements PreferredSizeWidget {
   final TabController tabController;
   final List<int> weekdays;
   final int weekCount;
-  final Widget Function(BuildContext context, DateTime date) tabBuilder;
+  final WeeklyTabBuilder tabBuilder;
+  final WeeklyTabCallback? onTabScrolled;
+  final WeeklyTabCallback? onTabChanged;
   final ScrollPhysics? scrollPhysics;
-  final Function(DateTime date)? onTabScrolled;
-  final Function(DateTime date)? onTabChanged;
 
   const WeeklyTabBar({
     required this.controller,
@@ -23,9 +24,9 @@ class WeeklyTabBar extends StatefulWidget implements PreferredSizeWidget {
     required this.weekdays,
     required this.weekCount,
     required this.tabBuilder,
-    this.scrollPhysics,
     this.onTabScrolled,
     this.onTabChanged,
+    this.scrollPhysics,
     super.key,
   });
 
@@ -38,18 +39,18 @@ class WeeklyTabBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _WeeklyTabBarState extends State<WeeklyTabBar>
     with TickerProviderStateMixin {
-  late DateTime centerPosition;
-  late int centerIndex;
-  late PageController pageController;
+  late DateTime _centerPosition;
+  late int _centerIndex;
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
 
-    centerPosition = widget.controller.position.weekStart(widget.weekdays);
-    centerIndex = widget.weekCount;
+    _centerPosition = widget.controller.position.weekStart(widget.weekdays);
+    _centerIndex = widget.weekCount;
 
-    pageController = PageController(initialPage: centerIndex);
+    _pageController = PageController(initialPage: _centerIndex);
     widget.controller.addListener(_updatePosition);
     widget.controller.animateTo(widget.controller.position);
   }
@@ -57,7 +58,7 @@ class _WeeklyTabBarState extends State<WeeklyTabBar>
   @override
   void dispose() {
     widget.controller.removeListener(_updatePosition);
-    pageController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -66,7 +67,7 @@ class _WeeklyTabBarState extends State<WeeklyTabBar>
     return SizedBox(
       height: WeeklyTabBar.widgetHeight,
       child: PageView.builder(
-        controller: pageController,
+        controller: _pageController,
         itemCount: widget.weekCount * 2,
         itemBuilder: (context, index) => _buildTabBar(_weekToDate(index)),
         onPageChanged: (index) =>
@@ -108,8 +109,8 @@ class _WeeklyTabBarState extends State<WeeklyTabBar>
     final week = _dateToWeek(widget.controller.position);
     final index = _dateToIndex(widget.controller.position);
 
-    if (pageController.hasClients) {
-      pageController.animateToPage(
+    if (_pageController.hasClients) {
+      _pageController.animateToPage(
         week,
         duration: WeeklyTabBar.animationDuration,
         curve: WeeklyTabBar.animationCurve,
@@ -130,12 +131,12 @@ class _WeeklyTabBarState extends State<WeeklyTabBar>
 
   DateTime _weekToDate(int week) {
     return DateUtils.addDaysToDate(
-      centerPosition,
-      (week - centerIndex) * DateTime.daysPerWeek,
+      _centerPosition,
+      (week - _centerIndex) * DateTime.daysPerWeek,
     );
   }
 
   int _dateToWeek(DateTime date) {
-    return centerIndex + date.differenceInWeeks(centerPosition);
+    return _centerIndex + date.differenceInWeeks(_centerPosition);
   }
 }

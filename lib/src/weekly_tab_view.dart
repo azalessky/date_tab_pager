@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'date_time_extension.dart';
+import 'weelky_tab_types.dart';
 import 'weekly_tab_controller.dart';
 
 class WeeklyTabView extends StatefulWidget {
@@ -8,9 +9,9 @@ class WeeklyTabView extends StatefulWidget {
   final TabController tabController;
   final List<int> weekdays;
   final int weekCount;
-  final Widget Function(BuildContext context, DateTime date) pageBuilder;
+  final WeeklyTabBuilder pageBuilder;
+  final WeeklyTabCallback? onPageChanged;
   final ScrollPhysics? scrollPhysics;
-  final Function(DateTime date)? onPageChanged;
 
   const WeeklyTabView({
     required this.controller,
@@ -18,8 +19,8 @@ class WeeklyTabView extends StatefulWidget {
     required this.weekdays,
     required this.weekCount,
     required this.pageBuilder,
-    this.scrollPhysics,
     this.onPageChanged,
+    this.scrollPhysics,
     super.key,
   });
 
@@ -71,8 +72,10 @@ class _WeeklyTabViewState extends State<WeeklyTabView>
       physics: widget.scrollPhysics,
       children: List.generate(
         tabController.length,
-        (index) =>
-            widget.pageBuilder(context, _pageToDate(index - centerIndex)),
+        (index) => widget.pageBuilder(
+          context,
+          _pageToDate(index - centerIndex),
+        ),
       ),
     );
   }

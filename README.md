@@ -23,7 +23,7 @@ Add the following line to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  weekly_tab_pager: ^0.0.7
+  weekly_tab_pager: ^0.0.8
 ```
 Import the package in your code:
 ```dart
