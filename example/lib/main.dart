@@ -12,18 +12,32 @@ class MainApp extends StatefulWidget {
   State<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends State<MainApp> {
-  final weekdays = [1, 3, 5, 6, 7];
-  final weekCount = 100;
-  late DateTime startDate;
-  late WeeklyTabController controller;
+class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
+  final _weekdays = [1, 2, 3, 4, 5, 6];
+  final _weekCount = 100;
+  late WeeklyTabController _controller;
+  late ValueNotifier<DateTime> _selectedDate;
 
   @override
   void initState() {
     super.initState();
 
-    startDate = WeeklyTabNavigator.calcSafeDate(DateTime.now(), weekdays);
-    controller = WeeklyTabController(position: startDate);
+    final today = DateTime.now();
+    _selectedDate = ValueNotifier(today);
+
+    _controller = WeeklyTabController(
+      initialDate: today,
+      weekdays: _weekdays,
+      weekCount: _weekCount,
+      vsync: this,
+    );
+    _controller.addListener(() => _selectedDate.value = _controller.position);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -34,30 +48,43 @@ class _MainAppState extends State<MainApp> {
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue),
       ),
       home: Scaffold(
+        appBar: AppBar(
+          title: _buildTitle(),
+          bottom: WeeklyTabBar(
+            controller: _controller,
+            tabBuilder: _buildTab,
+            onTabScrolled: _updateSelectedDate,
+            onTabChanged: _updateSelectedDate,
+          ),
+        ),
         body: SafeArea(
           child: Column(
             children: [
               Expanded(
-                child: WeeklyTabNavigator(
-                  controller: controller,
-                  weekdays: weekdays,
-                  weekCount: weekCount,
-                  tabBuilder: _buildTab,
+                child: WeeklyTabView(
+                  controller: _controller,
                   pageBuilder: _buildPage,
-                  onTabScrolled: (value) => debugPrint('onTabScrolled: $value'),
-                  onTabChanged: (value) => debugPrint('onTabChanged: $value'),
-                  onPageChanged: (value) => debugPrint('onPageChanged: $value'),
+                  onPageChanged: _updateSelectedDate,
                 ),
               ),
               const SizedBox(height: 24),
               FilledButton(
-                onPressed: () => controller.animateTo(startDate),
+                onPressed: () => _controller.animateTo(DateTime.now()),
                 child: const Text('Reset Position'),
               ),
               const SizedBox(height: 200),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTitle() {
+    return Center(
+      child: ValueListenableBuilder(
+        valueListenable: _selectedDate,
+        builder: (_, date, __) => Text(DateFormat.MMMM().format(date)),
       ),
     );
   }
@@ -91,5 +118,9 @@ class _MainAppState extends State<MainApp> {
         ),
       ),
     );
+  }
+
+  void _updateSelectedDate(DateTime date) {
+    _selectedDate.value = date;
   }
 }

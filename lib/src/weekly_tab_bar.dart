@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'date_time_extension.dart';
-import 'weelky_tab_types.dart';
+import 'weekly_tab_types.dart';
 import 'weekly_tab_controller.dart';
 
 class WeeklyTabBar extends StatefulWidget implements PreferredSizeWidget {
@@ -10,9 +10,6 @@ class WeeklyTabBar extends StatefulWidget implements PreferredSizeWidget {
   static const animationCurve = Curves.easeInOut;
 
   final WeeklyTabController controller;
-  final TabController tabController;
-  final List<int> weekdays;
-  final int weekCount;
   final WeeklyTabBuilder tabBuilder;
   final WeeklyTabCallback? onTabScrolled;
   final WeeklyTabCallback? onTabChanged;
@@ -20,9 +17,6 @@ class WeeklyTabBar extends StatefulWidget implements PreferredSizeWidget {
 
   const WeeklyTabBar({
     required this.controller,
-    required this.tabController,
-    required this.weekdays,
-    required this.weekCount,
     required this.tabBuilder,
     this.onTabScrolled,
     this.onTabChanged,
@@ -39,25 +33,32 @@ class WeeklyTabBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _WeeklyTabBarState extends State<WeeklyTabBar>
     with TickerProviderStateMixin {
+  late List<int> _weekdays;
+  late int _weekCount;
   late DateTime _centerPosition;
   late int _centerIndex;
+  late PositionController _controller;
   late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
 
-    _centerPosition = widget.controller.position.weekStart(widget.weekdays);
-    _centerIndex = widget.weekCount;
+    _weekdays = widget.controller.weekdays;
+    _weekCount = widget.controller.weekCount;
+    _controller = widget.controller.tabBarController;
+
+    _centerPosition = _controller.position.weekStart(_weekdays);
+    _centerIndex = _weekCount;
 
     _pageController = PageController(initialPage: _centerIndex);
-    widget.controller.addListener(_updatePosition);
-    widget.controller.animateTo(widget.controller.position);
+    _controller.addListener(_updatePosition);
+    _controller.animateTo(_controller.position);
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(_updatePosition);
+    _controller.removeListener(_updatePosition);
     _pageController.dispose();
     super.dispose();
   }
@@ -68,7 +69,7 @@ class _WeeklyTabBarState extends State<WeeklyTabBar>
       height: WeeklyTabBar.widgetHeight,
       child: PageView.builder(
         controller: _pageController,
-        itemCount: widget.weekCount * 2,
+        itemCount: _weekCount * 2,
         itemBuilder: (context, index) => _buildTabBar(_weekToDate(index)),
         onPageChanged: (index) =>
             widget.onTabScrolled?.call(_weekToDate(index)),
@@ -77,7 +78,7 @@ class _WeeklyTabBarState extends State<WeeklyTabBar>
   }
 
   Widget _buildTabBar(DateTime date) {
-    final isSelectedWeek = date.isSameWeek(widget.controller.position);
+    final isSelectedWeek = date.isSameWeek(_controller.position);
     final labelColor = isSelectedWeek
         ? null
         : Theme.of(context).tabBarTheme.unselectedLabelColor ??
@@ -88,19 +89,19 @@ class _WeeklyTabBarState extends State<WeeklyTabBar>
             Theme.of(context).textTheme.titleSmall;
 
     return TabBar(
-      controller: widget.tabController,
-      indicator: date.isSameWeek(widget.controller.position)
-          ? null
-          : const BoxDecoration(),
+      controller: widget.controller.tabController,
+      indicator:
+          date.isSameWeek(_controller.position) ? null : const BoxDecoration(),
       labelColor: labelColor,
       labelStyle: labelStyle,
       tabs: List.generate(
-        widget.weekdays.length,
+        _weekdays.length,
         (index) => widget.tabBuilder(context, _indexToDate(date, index)),
       ),
       onTap: (index) => setState(() {
-        widget.controller.setPosition(_indexToDate(date, index));
-        widget.onTabChanged?.call(widget.controller.position);
+        _controller.setPosition(_indexToDate(date, index));
+        widget.controller.animateTo(_controller.position);
+        widget.onTabChanged?.call(_controller.position);
       }),
     );
   }
@@ -116,16 +117,15 @@ class _WeeklyTabBarState extends State<WeeklyTabBar>
         curve: WeeklyTabBar.animationCurve,
       );
     }
-    widget.tabController.index = index;
+    widget.controller.tabController.index = index;
   }
 
   DateTime _indexToDate(DateTime position, int index) {
-    return position
-        .add(Duration(days: widget.weekdays[index] - widget.weekdays[0]));
+    return position.add(Duration(days: _weekdays[index] - _weekdays[0]));
   }
 
   int _dateToIndex(DateTime date) {
-    int index = widget.weekdays.indexOf(date.weekday);
+    int index = _weekdays.indexOf(date.weekday);
     return index < 0 ? 0 : index;
   }
 

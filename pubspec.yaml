@@ -4,7 +4,7 @@ description: Customizable TabBar component with integrated TabView that displays
 repository: https://github.com/azalessky/weekly_tab_pager
 issue_tracker: https://github.com/azalessky/weekly_tab_pager/issues
 
-version: 0.0.8
+version: 0.0.9
 homepage: https://indentix.com
 topics:
   - scrollable
