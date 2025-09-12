@@ -2,7 +2,7 @@
 
 Customizable TabBar component with integrated TabView that displays weekdays and allows for infinite scrolling by week.
 
-This component is used in the real-world application Homework Planner (<a href="https://apps.apple.com/app/id6479202666">iOS</a>, <a href="https://play.google.com/store/apps/details?id=com.indentix.studentplanner">Android</a>).
+This component is used in the real-world application Student Planner (<a href="https://play.google.com/store/apps/details?id=com.indentix.studentplanner">Android</a>).
 
 Feel free to use this library if you find it useful!
 
@@ -23,7 +23,7 @@ Add the following line to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  weekly_tab_pager: ^0.0.8
+  weekly_tab_pager: ^0.0.9
 ```
 Import the package in your code:
 ```dart
@@ -32,11 +32,21 @@ import 'package:weekly_tab_pager/weekly_tab_pager.dart';
 
 Declare a controller for navigation:
 ```dart
-final controller = WeeklyTabController(position: DateTime.now());
+final controller = WeeklyTabController(
+  initialDate: DateTime.now(),
+  weekdays: [1, 2, 3, 4, 5, 6],
+  weekCount: 100,
+  vsync: this,
+);
 ```
 
-Define how tabs will be built:
+Add a tabbar and define how tabs will be built:
 ```dart
+WeeklyTabBar(
+  controller: _controller,
+  tabBuilder: _buildTab,
+)
+
 Widget _buildTab(BuildContext context, DateTime date) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -49,8 +59,13 @@ Widget _buildTab(BuildContext context, DateTime date) {
 }
 ```
 
-Define how pages will be built:
+Add a tabview and define how pages will be built:
 ```dart
+WeeklyTabView(
+  controller: _controller,
+  pageBuilder: _buildPage,
+)
+
 Widget _buildPage(BuildContext context, DateTime date) {
   return Card(
     margin: const EdgeInsets.all(24),
@@ -62,17 +77,6 @@ Widget _buildPage(BuildContext context, DateTime date) {
     ),
   );
 }
-```
-
-Add a navigator widget to your code:
-```dart
-WeeklyTabNavigator(
-  controller: controller,
-  weekdays: [1, 2, 3, 4, 5],
-  weekCount: 1000,
-  tabBuilder: (context, date) => _buildTab(context, date),
-  pageBuilder: (context, date) => _buildPage(context, date),
-),
 ```
 
 Use a controller to navigate to the specific date:
