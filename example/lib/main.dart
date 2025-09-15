@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:weekly_tab_pager/weekly_tab_pager.dart';
+import 'weekly_view.dart';
+import 'monthly_view.dart';
 
 void main() => runApp(const MainApp());
 
@@ -12,33 +13,11 @@ class MainApp extends StatefulWidget {
   State<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
+class _MainAppState extends State<MainApp> {
   final _weekdays = [1, 2, 3, 4, 5, 6];
   final _weekCount = 100;
-  late WeeklyTabController _controller;
-  late ValueNotifier<DateTime> _selectedDate;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final today = DateTime.now();
-    _selectedDate = ValueNotifier(today);
-
-    _controller = WeeklyTabController(
-      initialDate: today,
-      weekdays: _weekdays,
-      weekCount: _weekCount,
-      vsync: this,
-    );
-    _controller.addListener(() => _selectedDate.value = _controller.position);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  final _selectedDate = ValueNotifier(DateTime.now());
+  int _selectedView = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -49,78 +28,54 @@ class _MainAppState extends State<MainApp> with SingleTickerProviderStateMixin {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: _buildTitle(),
-          bottom: WeeklyTabBar(
-            controller: _controller,
-            tabBuilder: _buildTab,
-            onTabScrolled: _updateSelectedDate,
-            onTabChanged: _updateSelectedDate,
+          title: ValueListenableBuilder<DateTime>(
+            valueListenable: _selectedDate,
+            builder: (_, date, __) =>
+                Center(child: Text(DateFormat.MMMM().format(date))),
           ),
         ),
         body: SafeArea(
           child: Column(
             children: [
               Expanded(
-                child: WeeklyTabView(
-                  controller: _controller,
-                  pageBuilder: _buildPage,
-                  onPageChanged: _updateSelectedDate,
+                child: IndexedStack(
+                  index: _selectedView,
+                  children: [
+                    WeeklyView(
+                      initialDate: _selectedDate.value,
+                      weekdays: _weekdays,
+                      weekCount: _weekCount,
+                      onDateChanged: (date) => _selectedDate.value = date,
+                    ),
+                    MonthlyView(
+                      initialDate: _selectedDate.value,
+                      weekdays: _weekdays,
+                      weekCount: _weekCount,
+                      onDateChanged: (date) => _selectedDate.value = date,
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 24),
-              FilledButton(
-                onPressed: () => _controller.animateTo(DateTime.now()),
-                child: const Text('Reset Position'),
+              const SizedBox(height: 48),
+              SegmentedButton<int>(
+                segments: const [
+                  ButtonSegment(value: 0, label: Text('Weekly View')),
+                  ButtonSegment(value: 1, label: Text('Monthly View')),
+                ],
+                selected: {_selectedView},
+                onSelectionChanged: (selection) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    setState(() {
+                      _selectedView = selection.first;
+                    });
+                  });
+                },
               ),
-              const SizedBox(height: 200),
+              const SizedBox(height: 100),
             ],
           ),
         ),
       ),
     );
-  }
-
-  Widget _buildTitle() {
-    return Center(
-      child: ValueListenableBuilder(
-        valueListenable: _selectedDate,
-        builder: (_, date, __) => Text(DateFormat.MMMM().format(date)),
-      ),
-    );
-  }
-
-  Widget _buildTab(BuildContext context, DateTime date) {
-    final child = Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(DateFormat('E').format(date).toUpperCase()),
-        const SizedBox(height: 4),
-        Text(date.day.toString()),
-      ],
-    );
-
-    return date.weekday >= 6
-        ? DefaultTextStyle.merge(
-            style: const TextStyle(color: Colors.red),
-            child: child,
-          )
-        : child;
-  }
-
-  Widget _buildPage(BuildContext context, DateTime date) {
-    return Card(
-      elevation: 8,
-      margin: const EdgeInsets.all(24),
-      child: Center(
-        child: Text(
-          DateFormat.yMMMMd().format(date),
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-      ),
-    );
-  }
-
-  void _updateSelectedDate(DateTime date) {
-    _selectedDate.value = date;
   }
 }

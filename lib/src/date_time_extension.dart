@@ -1,6 +1,6 @@
 extension DateTimeExtension on DateTime {
   DateTime weekStart(List<int> days) => add(Duration(
-        days: days[0] - weekday,
+        days: days.first - weekday,
       ));
 
   bool isSameDay(DateTime other) =>

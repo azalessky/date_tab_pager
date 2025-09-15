@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'data_types.dart';
 import 'period_tab_bar.dart';
-import 'weekly_adapter.dart';
+import 'monthly_adapter.dart';
 import 'position_controller.dart';
 
-class WeeklyTabBar extends StatelessWidget {
+class MonthlyTabBar extends StatelessWidget {
   final PositionController controller;
   final List<int> weekdays;
   final TabBuilder tabBuilder;
   final DateTimeCallback? onTabScrolled;
   final DateTimeCallback? onTabChanged;
 
-  const WeeklyTabBar({
+  const MonthlyTabBar({
     required this.controller,
     required this.weekdays,
     required this.tabBuilder,
@@ -25,7 +25,7 @@ class WeeklyTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return PeriodTabBar(
       controller: controller,
-      adapter: WeeklyAdapter(weekdays: weekdays),
+      adapter: MonthlyAdapter(weekdays: weekdays),
       tabBuilder: tabBuilder,
       onTabScrolled: onTabScrolled,
       onTabChanged: onTabChanged,
