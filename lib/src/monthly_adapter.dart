@@ -9,22 +9,25 @@ class MonthlyAdapter implements PeriodAdapter {
   DateTime pageDate(DateTime date) => DateTime(date.year, date.month, 1);
 
   @override
-  DateTime addPages(DateTime base, int offset) => DateTime(base.year, base.month + offset, 1);
+  DateTime pageToDate(DateTime base, int page) => DateTime(base.year, base.month + page, 1);
 
   @override
-  int dateToPageOffset(DateTime base, DateTime date) =>
+  int dateToPage(DateTime base, DateTime date) =>
       (date.year - base.year) * 12 + (date.month - base.month);
 
   @override
-  int subCount(DateTime pageStart) => _weeks(pageStart).length;
+  DateTime indexToDate(DateTime base, int index) => base.add(Duration(days: index * 7));
 
   @override
-  DateTime subIndexToDate(DateTime pageStart, int subIndex) => _weeks(pageStart)[subIndex];
+  int subCount(DateTime pageDate) => _weeks(pageDate).length;
 
   @override
-  int dateToSubIndex(DateTime pageStart, DateTime date) {
+  DateTime subIndexToDate(DateTime pageDate, int subIndex) => _weeks(pageDate)[subIndex];
+
+  @override
+  int dateToSubIndex(DateTime pageDate, DateTime date) {
     final weekIndex = (date.day - 1) ~/ 7;
-    if (weekIndex < 0 || weekIndex >= subCount(pageStart)) return -1;
+    if (weekIndex < 0 || weekIndex >= subCount(pageDate)) return -1;
     return weekIndex;
   }
 

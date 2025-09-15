@@ -1,13 +1,15 @@
 abstract class PeriodAdapter {
   DateTime pageDate(DateTime date);
 
-  DateTime addPages(DateTime base, int offset);
+  DateTime pageToDate(DateTime base, int page);
 
-  int dateToPageOffset(DateTime base, DateTime date);
+  int dateToPage(DateTime base, DateTime date);
 
-  int subCount(DateTime pageStart);
+  DateTime indexToDate(DateTime base, int index);
 
-  DateTime subIndexToDate(DateTime pageStart, int subIndex);
+  int subCount(DateTime pageDate);
 
-  int dateToSubIndex(DateTime pageStart, DateTime date);
+  DateTime subIndexToDate(DateTime pageDate, int subIndex);
+
+  int dateToSubIndex(DateTime pageDate, DateTime date);
 }
