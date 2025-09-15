@@ -5,7 +5,7 @@ import 'period_adapter.dart';
 import 'position_controller.dart';
 
 class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
-  static const maxUnits = 1000;
+  static const maxPages = 2000;
   static const widgetHeight = 70.0;
   static const animationDuration = Duration(milliseconds: 300);
   static const animationCurve = Curves.easeInOut;
@@ -35,7 +35,7 @@ class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMixin {
-  late DateTime _centerPageStart;
+  late DateTime _centerPage;
   late int _centerIndex;
   late PageController _pageController;
   final Map<int, TabController> _tabControllers = {};
@@ -44,19 +44,21 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
   void initState() {
     super.initState();
 
-    _centerPageStart = widget.adapter.pageStartFor(widget.controller.position);
-    _centerIndex = PeriodTabBar.maxUnits;
+    _centerPage = widget.adapter.pageDate(widget.controller.position);
+    _centerIndex = PeriodTabBar.maxPages ~/ 2;
     _pageController = PageController(initialPage: _centerIndex);
+
     widget.controller.addListener(_updatePosition);
   }
 
   @override
   void dispose() {
     widget.controller.removeListener(_updatePosition);
+
     _pageController.dispose();
-    for (var c in _tabControllers.values) {
-      c.dispose();
-    }
+    _tabControllers.forEach((_, c) => c.dispose());
+    _tabControllers.clear();
+
     super.dispose();
   }
 
@@ -66,87 +68,75 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
       height: PeriodTabBar.widgetHeight,
       child: PageView.builder(
         controller: _pageController,
-        itemBuilder: (context, index) {
-          final pageDate = widget.adapter.addPages(_centerPageStart, index - _centerIndex);
-          final tabController = _initTabController(index: index, pageDate: pageDate);
-
-          return _buildTabBar(pageDate, tabController);
-        },
+        itemBuilder: (_, index) => _buildTabBar(index),
         onPageChanged: (index) {
-          final pageDate = widget.adapter.addPages(_centerPageStart, index - _centerIndex);
+          final pageDate = widget.adapter.addPages(_centerPage, index - _centerIndex);
           widget.onTabScrolled?.call(pageDate);
         },
       ),
     );
   }
 
-  TabController _initTabController({
-    required int index,
-    required DateTime pageDate,
-  }) {
-    final count = widget.adapter.subCount(pageDate);
+  TabController _initTabController(int pageIndex, DateTime pageDate) {
+    final tabCount = widget.adapter.subCount(pageDate);
 
-    var tabController = _tabControllers[index];
-    if (tabController == null || tabController.length != count) {
-      final initialIndex = widget.adapter.dateToSubIndex(pageDate, widget.controller.position);
+    var tabController = _tabControllers[pageIndex];
+    if (tabController == null || tabController.length != tabCount) {
+      final tabIndex = widget.adapter.dateToSubIndex(pageDate, widget.controller.position);
 
       tabController?.dispose();
-      tabController = TabController(length: count, vsync: this, initialIndex: initialIndex);
-
-      tabController.addListener(() {
-        if (!tabController!.indexIsChanging) return;
-        final date = widget.adapter.subIndexToDate(pageDate, tabController.index);
-        widget.controller.animateTo(date);
-        widget.onTabChanged?.call(date);
-      });
-
-      _tabControllers[index] = tabController;
+      tabController = TabController(initialIndex: tabIndex, length: tabCount, vsync: this);
+      _tabControllers[pageIndex] = tabController;
     }
 
     return tabController;
   }
 
-  Widget _buildTabBar(DateTime pageStart, TabController tabController) {
-    final isSelected = pageStart == widget.adapter.pageStartFor(widget.controller.position);
-
-    final labelColor = isSelected
-        ? null
-        : Theme.of(context).tabBarTheme.unselectedLabelColor ??
-            Theme.of(context).colorScheme.onSurfaceVariant;
-    final labelStyle = isSelected
-        ? null
-        : Theme.of(context).tabBarTheme.unselectedLabelStyle ??
-            Theme.of(context).textTheme.titleSmall;
-
-    final count = widget.adapter.subCount(pageStart);
+  Widget _buildTabBar(int pageIndex) {
+    final pageDate = widget.adapter.addPages(_centerPage, pageIndex - _centerIndex);
+    final tabController = _initTabController(pageIndex, pageDate);
+    final tabCount = widget.adapter.subCount(pageDate);
+    final isSelected = pageDate == widget.adapter.pageDate(widget.controller.position);
 
     return TabBar(
       controller: tabController,
       indicator: isSelected ? null : const BoxDecoration(),
-      labelColor: labelColor,
-      labelStyle: labelStyle,
+      labelColor: _labelColor(context, isSelected),
+      labelStyle: _labelStyle(context, isSelected),
       tabs: List.generate(
-        count,
+        tabCount,
         (index) => widget.tabBuilder(
           context,
-          widget.adapter.subIndexToDate(pageStart, index),
+          widget.adapter.subIndexToDate(pageDate, index),
         ),
       ),
-      onTap: (index) {
-        final date = widget.adapter.subIndexToDate(pageStart, index);
-        widget.controller.animateTo(date);
+      onTap: (index) => setState(() {
+        final date = widget.adapter.subIndexToDate(pageDate, index);
+        widget.controller.setPosition(date);
         widget.onTabChanged?.call(date);
-      },
+      }),
     );
   }
 
-  void _updatePosition() {
-    final pageOffset =
-        widget.adapter.dateToPageOffset(_centerPageStart, widget.controller.position);
-    final pageStart = widget.adapter.addPages(_centerPageStart, pageOffset);
-    final pageIndex = _centerIndex + pageOffset;
+  Color? _labelColor(BuildContext context, bool isSelected) {
+    return isSelected
+        ? null
+        : Theme.of(context).tabBarTheme.unselectedLabelColor ??
+            Theme.of(context).colorScheme.onSurfaceVariant;
+  }
 
-    final subIndex = widget.adapter.dateToSubIndex(pageStart, widget.controller.position);
+  TextStyle? _labelStyle(BuildContext context, bool isSelected) {
+    return isSelected
+        ? null
+        : Theme.of(context).tabBarTheme.unselectedLabelStyle ??
+            Theme.of(context).textTheme.titleSmall;
+  }
+
+  void _updatePosition() {
+    final pageOffset = widget.adapter.dateToPageOffset(_centerPage, widget.controller.position);
+    final pageDate = widget.adapter.addPages(_centerPage, pageOffset);
+    final pageIndex = _centerIndex + pageOffset;
+    final subIndex = widget.adapter.dateToSubIndex(pageDate, widget.controller.position);
 
     if (_pageController.hasClients) {
       _pageController.animateToPage(

@@ -20,8 +20,7 @@ class MonthlyView extends StatefulWidget {
   State<MonthlyView> createState() => _MonthlyViewState();
 }
 
-class _MonthlyViewState extends State<MonthlyView>
-    with TickerProviderStateMixin {
+class _MonthlyViewState extends State<MonthlyView> with TickerProviderStateMixin {
   late PositionController _controller;
 
   @override

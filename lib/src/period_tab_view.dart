@@ -4,6 +4,8 @@ import 'period_adapter.dart';
 import 'position_controller.dart';
 
 class PeriodTabView extends StatefulWidget {
+  static const maxUnits = 1000;
+
   final PositionController controller;
   final PeriodAdapter adapter;
   final PageBuilder pageBuilder;
@@ -33,19 +35,17 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
   void initState() {
     super.initState();
 
-    _centerPageStart = widget.adapter.pageStartFor(widget.controller.position);
-    _centerIndex = 1000;
+    _centerPageStart = widget.adapter.pageDate(widget.controller.position);
+    _centerIndex = PeriodTabView.maxUnits;
     _pageController = PageController(initialPage: _centerIndex);
 
     _initTabController(_centerPageStart);
-
     widget.controller.addListener(_updatePosition);
   }
 
   void _initTabController(DateTime pageStart) {
     final subCount = widget.adapter.subCount(pageStart);
-    final initialIndex =
-        widget.adapter.dateToSubIndex(pageStart, widget.controller.position).clamp(0, subCount - 1);
+    final initialIndex = widget.adapter.dateToSubIndex(pageStart, widget.controller.position);
 
     _tabController?.dispose();
     _tabController = TabController(length: subCount, vsync: this, initialIndex: initialIndex);

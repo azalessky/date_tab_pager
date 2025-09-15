@@ -1,10 +1,11 @@
+import 'dart:math' as math;
+
 extension DateTimeExtension on DateTime {
   DateTime weekStart(List<int> days) => add(Duration(
         days: days.first - weekday,
       ));
 
-  bool isSameDay(DateTime other) =>
-      year == other.year && month == other.month && day == other.day;
+  bool isSameDay(DateTime other) => year == other.year && month == other.month && day == other.day;
 
   bool isSameWeek(DateTime other) =>
       DateTime(year, month, day - weekday) ==
@@ -13,9 +14,7 @@ extension DateTimeExtension on DateTime {
   int differenceInWeeks(DateTime other) {
     final diff = differenceInDays(other);
     final days = weekday - other.weekday;
-    final weeks = diff ~/ 7 +
-        (diff < 0 && days > 0 ? -1 : 0) +
-        (diff > 0 && days < 0 ? 1 : 0);
+    final weeks = diff ~/ 7 + (diff < 0 && days > 0 ? -1 : 0) + (diff > 0 && days < 0 ? 1 : 0);
     return weeks;
   }
 
@@ -23,5 +22,22 @@ extension DateTimeExtension on DateTime {
     final from = DateTime(year, month, day);
     final to = DateTime(other.year, other.month, other.day);
     return (from.difference(to).inHours / 24).round();
+  }
+
+  DateTime safeDate(List<int> weekdays) {
+    final date = DateTime(year, month, day);
+    int min = weekdays.reduce(math.min);
+    int max = weekdays.reduce(math.max);
+    int weekday = date.weekday;
+
+    if (weekday < min) {
+      return date.add(Duration(days: min - weekday));
+    } else if (weekday > max) {
+      return date.add(Duration(days: min - weekday + 7));
+    } else if (!weekdays.contains(weekday)) {
+      int next = weekdays.where((e) => e > weekday).first;
+      return date.add(Duration(days: next - weekday));
+    }
+    return date;
   }
 }

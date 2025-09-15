@@ -1,43 +1,28 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'date_time_extension.dart';
 
 class PositionController extends ChangeNotifier {
-  final List<int> weekdays;
-  DateTime position;
-  DateTime? previous;
+  final List<int> _weekdays;
+  DateTime _position;
+  DateTime? _previous;
 
   PositionController({
-    required this.position,
-    required this.weekdays,
-  });
+    required DateTime position,
+    required List<int> weekdays,
+  })  : _weekdays = weekdays,
+        _position = position.safeDate(weekdays);
 
-  bool get isWeekChanged => previous != null && !position.isSameWeek(previous!);
+  DateTime get position => _position;
+  bool get isWeekChanged => _previous != null && !_position.isSameWeek(_previous!);
 
   void animateTo(DateTime date) {
-    setPosition(calcSafeDate(date, weekdays));
+    setPosition(date.safeDate(_weekdays));
     notifyListeners();
   }
 
-  void setPosition(DateTime date, {double? offset}) {
-    previous = position;
-    position = date;
-  }
-
-  static DateTime calcSafeDate(DateTime date, List<int> weekdays) {
-    int min = weekdays.reduce(math.min);
-    int max = weekdays.reduce(math.max);
-    int day = date.weekday;
-
-    if (day < min) {
-      return date.add(Duration(days: min - day));
-    } else if (day > max) {
-      return date.add(Duration(days: min - day + 7));
-    } else if (!weekdays.contains(day)) {
-      int next = weekdays.where((e) => e > day).first;
-      return date.add(Duration(days: next - day));
-    }
-    return date;
+  void setPosition(DateTime date) {
+    _previous = _position;
+    _position = date;
   }
 }

@@ -1,5 +1,5 @@
 abstract class PeriodAdapter {
-  DateTime pageStartFor(DateTime date);
+  DateTime pageDate(DateTime date);
 
   DateTime addPages(DateTime base, int offset);
 

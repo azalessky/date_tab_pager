@@ -7,7 +7,7 @@ class WeeklyAdapter implements PeriodAdapter {
   const WeeklyAdapter({required this.weekdays});
 
   @override
-  DateTime pageStartFor(DateTime date) => date.weekStart(weekdays);
+  DateTime pageDate(DateTime date) => date.weekStart(weekdays);
 
   @override
   DateTime addPages(DateTime base, int offset) => base.add(Duration(days: offset * 7));

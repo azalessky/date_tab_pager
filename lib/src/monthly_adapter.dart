@@ -6,7 +6,7 @@ class MonthlyAdapter implements PeriodAdapter {
   const MonthlyAdapter({required this.weekdays});
 
   @override
-  DateTime pageStartFor(DateTime date) => DateTime(date.year, date.month, 1);
+  DateTime pageDate(DateTime date) => DateTime(date.year, date.month, 1);
 
   @override
   DateTime addPages(DateTime base, int offset) => DateTime(base.year, base.month + offset, 1);
