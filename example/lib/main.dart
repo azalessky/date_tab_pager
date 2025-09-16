@@ -14,7 +14,7 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  final _weekdays = [1, 2, 3, 4, 5, 6];
+  final _weekdays = [2, 3, 4, 5, 6];
   final _weekCount = 100;
   final _selectedDate = ValueNotifier(DateTime.now());
   int _selectedView = 0;
@@ -30,8 +30,7 @@ class _MainAppState extends State<MainApp> {
         appBar: AppBar(
           title: ValueListenableBuilder<DateTime>(
             valueListenable: _selectedDate,
-            builder: (_, date, __) =>
-                Center(child: Text(DateFormat.MMMM().format(date))),
+            builder: (_, date, __) => Center(child: Text(DateFormat.MMMM().format(date))),
           ),
         ),
         body: SafeArea(

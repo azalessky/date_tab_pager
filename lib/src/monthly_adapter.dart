@@ -1,3 +1,5 @@
+import 'package:weekly_tab_pager/src/date_time_extension.dart';
+
 import 'period_adapter.dart';
 
 class MonthlyAdapter implements PeriodAdapter {
@@ -17,6 +19,9 @@ class MonthlyAdapter implements PeriodAdapter {
 
   @override
   DateTime indexToDate(DateTime base, int index) => base.add(Duration(days: index * 7));
+
+  @override
+  int dateToIndex(DateTime base, DateTime date) => date.differenceInWeeks(base);
 
   @override
   int subCount(DateTime pageDate) => _weeks(pageDate).length;

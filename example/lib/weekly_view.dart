@@ -23,6 +23,7 @@ class WeeklyView extends StatefulWidget {
 
 class _WeeklyViewState extends State<WeeklyView> with TickerProviderStateMixin {
   late PositionController _controller;
+  late SyncController _sync;
 
   @override
   void initState() {
@@ -31,11 +32,13 @@ class _WeeklyViewState extends State<WeeklyView> with TickerProviderStateMixin {
       position: widget.initialDate,
       weekdays: widget.weekdays,
     );
+    _sync = SyncController();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _sync.dispose();
     super.dispose();
   }
 
@@ -45,6 +48,7 @@ class _WeeklyViewState extends State<WeeklyView> with TickerProviderStateMixin {
       children: [
         WeeklyTabBar(
           controller: _controller,
+          sync: _sync,
           weekdays: widget.weekdays,
           tabBuilder: (_, date) => _buildTab(date),
           onTabScrolled: widget.onDateChanged,
@@ -54,6 +58,7 @@ class _WeeklyViewState extends State<WeeklyView> with TickerProviderStateMixin {
         Expanded(
           child: WeeklyTabView(
             controller: _controller,
+            sync: _sync,
             weekdays: widget.weekdays,
             pageBuilder: (_, date) => _buildPage(date),
             onPageChanged: widget.onDateChanged,

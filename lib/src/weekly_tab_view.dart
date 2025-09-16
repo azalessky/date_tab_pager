@@ -4,15 +4,18 @@ import 'data_types.dart';
 import 'period_tab_view.dart';
 import 'weekly_adapter.dart';
 import 'position_controller.dart';
+import 'sync_controller.dart';
 
 class WeeklyTabView extends StatelessWidget {
   final PositionController controller;
+  final SyncController sync;
   final List<int> weekdays;
   final PageBuilder pageBuilder;
   final DateTimeCallback? onPageChanged;
 
   const WeeklyTabView({
     required this.controller,
+    required this.sync,
     required this.weekdays,
     required this.pageBuilder,
     this.onPageChanged,
@@ -23,6 +26,7 @@ class WeeklyTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PeriodTabView(
       controller: controller,
+      sync: sync,
       adapter: WeeklyAdapter(weekdays: weekdays),
       pageBuilder: pageBuilder,
       onPageChanged: onPageChanged,

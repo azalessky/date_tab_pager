@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'data_types.dart';
 import 'period_adapter.dart';
 import 'position_controller.dart';
+import 'sync_controller.dart';
 
 class PeriodTabView extends StatefulWidget {
   static const maxPages = 2000;
@@ -9,12 +11,14 @@ class PeriodTabView extends StatefulWidget {
   static const animationCurve = Curves.easeInOut;
 
   final PositionController controller;
+  final SyncController sync;
   final PeriodAdapter adapter;
   final PageBuilder pageBuilder;
   final DateTimeCallback? onPageChanged;
 
   const PeriodTabView({
     required this.controller,
+    required this.sync,
     required this.adapter,
     required this.pageBuilder,
     this.onPageChanged,
@@ -28,7 +32,7 @@ class PeriodTabView extends StatefulWidget {
 class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateMixin {
   late DateTime _centerPage;
   late int _centerIndex;
-  late PageController _pageController;
+  late TabController _tabController;
 
   @override
   void initState() {
@@ -36,43 +40,66 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
 
     _centerPage = widget.adapter.pageDate(widget.controller.position);
     _centerIndex = PeriodTabView.maxPages ~/ 2;
+    final initialIndex =
+        _centerIndex + widget.adapter.dateToIndex(_centerPage, widget.controller.position);
 
-    final initialIndex = widget.adapter.dateToSubIndex(_centerPage, widget.controller.position);
-    _pageController = PageController(initialPage: _centerIndex + initialIndex);
+    _tabController = TabController(
+      initialIndex: initialIndex,
+      length: PeriodTabView.maxPages,
+      vsync: this,
+    );
+    _tabController.addListener(_syncTabIndex);
+    _tabController.animation?.addListener(_syncTabOffset);
 
     widget.controller.addListener(_updatePosition);
+    widget.sync.position.addListener(_updatePosition);
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _tabController.removeListener(_syncTabIndex);
+    _tabController.animation?.removeListener(_syncTabOffset);
+    _tabController.dispose();
+
     widget.controller.removeListener(_updatePosition);
+    widget.sync.position.removeListener(_updatePosition);
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
-      controller: _pageController,
-      itemCount: PeriodTabView.maxPages,
-      itemBuilder: (context, index) {
-        final date = widget.adapter.indexToDate(_centerPage, index - _centerIndex);
-        return widget.pageBuilder(context, date);
-      },
-      onPageChanged: (index) {
-        final date = widget.adapter.indexToDate(_centerPage, index - _centerIndex);
-        widget.onPageChanged?.call(date);
-      },
+    return TabBarView(
+      controller: _tabController,
+      children: List.generate(
+        PeriodTabView.maxPages,
+        (index) {
+          final date = widget.adapter.indexToDate(_centerPage, index - _centerIndex);
+          return widget.pageBuilder(context, date);
+        },
+      ),
     );
   }
 
   void _updatePosition() {
-    final pageIndex = widget.adapter.dateToPage(_centerPage, widget.controller.position);
-    _pageController.animateToPage(
+    final pageIndex = widget.adapter.dateToIndex(_centerPage, widget.controller.position);
+    _tabController.animateTo(
       _centerIndex + pageIndex,
       duration: PeriodTabView.animationDuration,
       curve: PeriodTabView.animationCurve,
     );
+  }
+
+  void _syncTabIndex() {
+    final index = _tabController.index - _centerIndex;
+    final date = widget.adapter.indexToDate(_centerPage, index);
+
+    widget.controller.animateTo(date);
+    widget.onPageChanged?.call(date);
+  }
+
+  void _syncTabOffset() {
+    final offset = _tabController.offset;
+    if (offset != 0) widget.sync.offset.value = offset;
   }
 }

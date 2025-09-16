@@ -22,6 +22,7 @@ class MonthlyView extends StatefulWidget {
 
 class _MonthlyViewState extends State<MonthlyView> with TickerProviderStateMixin {
   late PositionController _controller;
+  late SyncController _sync;
 
   @override
   void initState() {
@@ -31,12 +32,45 @@ class _MonthlyViewState extends State<MonthlyView> with TickerProviderStateMixin
       position: widget.initialDate,
       weekdays: widget.weekdays,
     );
+    _sync = SyncController();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _sync.dispose();
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        MonthlyTabBar(
+          controller: _controller,
+          sync: _sync,
+          weekdays: widget.weekdays,
+          tabBuilder: (_, date) => _buildTab(date),
+          onTabScrolled: widget.onDateChanged,
+          onTabChanged: widget.onDateChanged,
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: MonthlyTabView(
+            controller: _controller,
+            sync: _sync,
+            weekdays: widget.weekdays,
+            pageBuilder: (_, date) => _buildPage(date),
+            onPageChanged: widget.onDateChanged,
+          ),
+        ),
+        const SizedBox(height: 16),
+        FilledButton(
+          onPressed: _resetPosition,
+          child: const Text('Reset Position'),
+        ),
+      ],
+    );
   }
 
   Widget _buildTab(DateTime date) {
@@ -44,7 +78,7 @@ class _MonthlyViewState extends State<MonthlyView> with TickerProviderStateMixin
     final end = _weekEnd(date, widget.weekdays);
     return Center(
       child: Text(
-        '${start.day}-${end.day}',
+        '${start.day} - ${end.day}',
         overflow: TextOverflow.ellipsis,
       ),
     );
@@ -63,35 +97,6 @@ class _MonthlyViewState extends State<MonthlyView> with TickerProviderStateMixin
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        MonthlyTabBar(
-          controller: _controller,
-          weekdays: widget.weekdays,
-          tabBuilder: (_, date) => _buildTab(date),
-          onTabScrolled: widget.onDateChanged,
-          onTabChanged: widget.onDateChanged,
-        ),
-        const SizedBox(height: 8),
-        Expanded(
-          child: MonthlyTabView(
-            controller: _controller,
-            weekdays: widget.weekdays,
-            pageBuilder: (_, date) => _buildPage(date),
-            onPageChanged: widget.onDateChanged,
-          ),
-        ),
-        const SizedBox(height: 16),
-        FilledButton(
-          onPressed: _resetPosition,
-          child: const Text('Reset Position'),
-        ),
-      ],
     );
   }
 

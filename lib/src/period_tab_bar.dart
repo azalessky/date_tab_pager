@@ -3,22 +3,26 @@ import 'package:flutter/material.dart';
 import 'data_types.dart';
 import 'period_adapter.dart';
 import 'position_controller.dart';
+import 'sync_controller.dart';
 
 class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
   static const maxPages = 2000;
-  static const widgetHeight = 70.0;
   static const animationDuration = Duration(milliseconds: 300);
   static const animationCurve = Curves.easeInOut;
 
   final PositionController controller;
+  final SyncController sync;
   final PeriodAdapter adapter;
+  final double height;
   final TabBuilder tabBuilder;
   final DateTimeCallback? onTabScrolled;
   final DateTimeCallback? onTabChanged;
 
   const PeriodTabBar({
     required this.controller,
+    required this.sync,
     required this.adapter,
+    required this.height,
     required this.tabBuilder,
     this.onTabScrolled,
     this.onTabChanged,
@@ -26,7 +30,7 @@ class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(widgetHeight);
+  Size get preferredSize => Size.fromHeight(height);
 
   @override
   State<PeriodTabBar> createState() => _PeriodTabBarState();
@@ -45,7 +49,9 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     _centerPage = widget.adapter.pageDate(widget.controller.position);
     _centerIndex = PeriodTabBar.maxPages ~/ 2;
     _pageController = PageController(initialPage: _centerIndex);
+
     widget.controller.addListener(_updatePosition);
+    widget.sync.offset.addListener(_syncTabOffset);
   }
 
   @override
@@ -53,7 +59,9 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     _pageController.dispose();
     _tabControllers.forEach((_, c) => c.dispose());
     _tabControllers.clear();
+
     widget.controller.removeListener(_updatePosition);
+    widget.sync.offset.removeListener(_syncTabOffset);
 
     super.dispose();
   }
@@ -61,7 +69,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: PeriodTabBar.widgetHeight,
+      height: widget.height,
       child: PageView.builder(
         controller: _pageController,
         itemBuilder: (_, index) => _buildTabBar(index),
@@ -109,6 +117,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
       onTap: (index) => setState(() {
         final date = widget.adapter.subIndexToDate(pageDate, index);
         widget.controller.setPosition(date);
+        widget.sync.position.value = date;
         widget.onTabChanged?.call(date);
       }),
     );
@@ -134,17 +143,32 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     final pageIndex = _centerIndex + pageOffset;
     final subIndex = widget.adapter.dateToSubIndex(pageDate, widget.controller.position);
 
-    if (_pageController.hasClients) {
-      _pageController.animateToPage(
-        pageIndex,
-        duration: PeriodTabBar.animationDuration,
-        curve: PeriodTabBar.animationCurve,
-      );
-    }
+    _pageController.animateToPage(
+      pageIndex,
+      duration: PeriodTabBar.animationDuration,
+      curve: PeriodTabBar.animationCurve,
+    );
 
     final tabController = _tabControllers[pageIndex];
-    if (tabController != null && subIndex >= 0 && subIndex < tabController.length) {
+    if (tabController != null) {
       tabController.animateTo(subIndex);
+    }
+  }
+
+  void _syncTabOffset() {
+    final pageOffset = widget.adapter.dateToPage(_centerPage, widget.controller.position);
+    final pageIndex = _centerIndex + pageOffset;
+
+    final tabController = _tabControllers[pageIndex];
+    if (tabController != null) {
+      final index = tabController.index;
+      final offset = widget.sync.offset.value;
+
+      if (!tabController.indexIsChanging && offset < 1 && offset > -1) {
+        if (index == 0 && offset < 0) return;
+        if (index == tabController.length - 1 && offset > 0) return;
+        tabController.offset = offset;
+      }
     }
   }
 }

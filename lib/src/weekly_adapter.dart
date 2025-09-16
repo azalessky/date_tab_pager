@@ -17,11 +17,24 @@ class WeeklyAdapter implements PeriodAdapter {
 
   @override
   DateTime indexToDate(DateTime base, int index) {
-    final weeksOffset = index ~/ weekdays.length;
-    final subIndex = index % weekdays.length;
+    final length = weekdays.length;
+    final weeksOffset = (index >= 0) ? index ~/ length : ((index + 1) ~/ length) - 1;
+    final subIndex = index - weeksOffset * length;
 
     final weekStart = base.add(Duration(days: weeksOffset * 7));
     return weekStart.add(Duration(days: weekdays[subIndex] - weekdays.first));
+  }
+
+  @override
+  int dateToIndex(DateTime base, DateTime date) {
+    final diffDays = date.difference(base).inDays;
+    final weeksOffset = (diffDays >= 0) ? diffDays ~/ 7 : ((diffDays + 1) ~/ 7) - 1;
+    final weekStart = base.add(Duration(days: weeksOffset * 7));
+
+    final dayOffset = date.difference(weekStart).inDays;
+    final subIndex = weekdays.indexWhere((d) => d - weekdays.first == dayOffset);
+
+    return weeksOffset * weekdays.length + subIndex;
   }
 
   @override
