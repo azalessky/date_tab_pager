@@ -5,14 +5,14 @@ import 'package:intl/intl.dart';
 class MonthlyView extends StatefulWidget {
   final DateTime initialDate;
   final List<int> weekdays;
-  final int weekCount;
+  final int maxItems;
   final void Function(DateTime date)? onDateChanged;
 
   const MonthlyView({
     super.key,
     required this.initialDate,
     required this.weekdays,
-    required this.weekCount,
+    required this.maxItems,
     this.onDateChanged,
   });
 
@@ -50,6 +50,7 @@ class _MonthlyViewState extends State<MonthlyView> with TickerProviderStateMixin
           controller: _controller,
           sync: _sync,
           weekdays: widget.weekdays,
+          maxItems: widget.maxItems,
           tabBuilder: (_, date) => _buildTab(date),
           onTabScrolled: widget.onDateChanged,
           onTabChanged: widget.onDateChanged,
@@ -59,6 +60,7 @@ class _MonthlyViewState extends State<MonthlyView> with TickerProviderStateMixin
           child: MonthlyTabView(
             controller: _controller,
             sync: _sync,
+            maxItems: widget.maxItems,
             weekdays: widget.weekdays,
             pageBuilder: (_, date) => _buildPage(date),
             onPageChanged: widget.onDateChanged,

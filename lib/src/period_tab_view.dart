@@ -6,13 +6,13 @@ import 'position_controller.dart';
 import 'sync_controller.dart';
 
 class PeriodTabView extends StatefulWidget {
-  static const maxPages = 2000;
   static const animationDuration = Duration(milliseconds: 300);
   static const animationCurve = Curves.easeInOut;
 
   final PositionController controller;
   final SyncController sync;
   final PeriodAdapter adapter;
+  final int maxItems;
   final PageBuilder pageBuilder;
   final DateTimeCallback? onPageChanged;
 
@@ -20,6 +20,7 @@ class PeriodTabView extends StatefulWidget {
     required this.controller,
     required this.sync,
     required this.adapter,
+    required this.maxItems,
     required this.pageBuilder,
     this.onPageChanged,
     super.key,
@@ -32,6 +33,7 @@ class PeriodTabView extends StatefulWidget {
 class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateMixin {
   late DateTime _centerPage;
   late int _centerIndex;
+  late int _itemCount;
   late TabController _tabController;
 
   @override
@@ -39,15 +41,13 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
     super.initState();
 
     _centerPage = widget.adapter.pageDate(widget.controller.position);
-    _centerIndex = PeriodTabView.maxPages ~/ 2;
+    _itemCount = widget.adapter.itemCount(_centerPage, widget.maxItems);
+    _centerIndex = _itemCount ~/ 2;
+
     final initialIndex =
         _centerIndex + widget.adapter.dateToIndex(_centerPage, widget.controller.position);
 
-    _tabController = TabController(
-      initialIndex: initialIndex,
-      length: PeriodTabView.maxPages,
-      vsync: this,
-    );
+    _tabController = TabController(initialIndex: initialIndex, length: _itemCount, vsync: this);
     _tabController.addListener(_syncTabIndex);
     _tabController.animation?.addListener(_syncTabOffset);
 
@@ -72,7 +72,7 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
     return TabBarView(
       controller: _tabController,
       children: List.generate(
-        PeriodTabView.maxPages,
+        _itemCount,
         (index) {
           final date = widget.adapter.indexToDate(_centerPage, index - _centerIndex);
           return widget.pageBuilder(context, date);

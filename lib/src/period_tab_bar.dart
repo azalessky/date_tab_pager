@@ -6,7 +6,6 @@ import 'position_controller.dart';
 import 'sync_controller.dart';
 
 class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
-  static const maxPages = 2000;
   static const animationDuration = Duration(milliseconds: 300);
   static const animationCurve = Curves.easeInOut;
 
@@ -14,6 +13,7 @@ class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
   final SyncController sync;
   final PeriodAdapter adapter;
   final double height;
+  final int maxItems;
   final TabBuilder tabBuilder;
   final DateTimeCallback? onTabScrolled;
   final DateTimeCallback? onTabChanged;
@@ -23,6 +23,7 @@ class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
     required this.sync,
     required this.adapter,
     required this.height,
+    required this.maxItems,
     required this.tabBuilder,
     this.onTabScrolled,
     this.onTabChanged,
@@ -39,6 +40,7 @@ class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
 class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMixin {
   late DateTime _centerPage;
   late int _centerIndex;
+  late int _pageCount;
   late PageController _pageController;
   final Map<int, TabController> _tabControllers = {};
 
@@ -47,7 +49,8 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     super.initState();
 
     _centerPage = widget.adapter.pageDate(widget.controller.position);
-    _centerIndex = PeriodTabBar.maxPages ~/ 2;
+    _pageCount = widget.adapter.pageCount(_centerPage, widget.maxItems);
+    _centerIndex = _pageCount ~/ 2;
     _pageController = PageController(initialPage: _centerIndex);
 
     widget.controller.addListener(_updatePosition);
@@ -72,6 +75,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
       height: widget.height,
       child: PageView.builder(
         controller: _pageController,
+        itemCount: _pageCount,
         itemBuilder: (_, index) => _buildTabBar(index),
         onPageChanged: (index) {
           final pageDate = widget.adapter.pageToDate(_centerPage, index - _centerIndex);
@@ -162,7 +166,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
       final index = tabController.index;
       final offset = widget.sync.offset.value;
 
-      if (!tabController.indexIsChanging && offset != 0) {
+      if (!tabController.indexIsChanging && offset != 0 && offset.abs() < 1) {
         if (index == 0 && offset < 0) return;
         if (index == tabController.length - 1 && offset > 0) return;
         tabController.offset = offset;

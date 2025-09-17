@@ -11,6 +11,7 @@ class WeeklyTabBar extends StatelessWidget {
   final SyncController sync;
   final List<int> weekdays;
   final double height;
+  final int maxPages;
   final TabBuilder tabBuilder;
   final DateTimeCallback? onTabScrolled;
   final DateTimeCallback? onTabChanged;
@@ -20,6 +21,7 @@ class WeeklyTabBar extends StatelessWidget {
     required this.sync,
     required this.weekdays,
     this.height = 70.0,
+    this.maxPages = 2000,
     required this.tabBuilder,
     this.onTabScrolled,
     this.onTabChanged,
@@ -33,6 +35,7 @@ class WeeklyTabBar extends StatelessWidget {
       sync: sync,
       adapter: WeeklyAdapter(weekdays: weekdays),
       height: height,
+      maxItems: maxPages,
       tabBuilder: tabBuilder,
       onTabScrolled: onTabScrolled,
       onTabChanged: onTabChanged,

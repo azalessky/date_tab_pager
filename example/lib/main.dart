@@ -14,8 +14,8 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  final _weekdays = [2, 3, 4, 5, 6];
-  final _weekCount = 100;
+  final _weekdays = [1, 3, 5, 6];
+  final _maxItems = 2000;
   final _selectedDate = ValueNotifier(DateTime.now());
   int _selectedView = 0;
 
@@ -43,13 +43,13 @@ class _MainAppState extends State<MainApp> {
                     WeeklyView(
                       initialDate: _selectedDate.value,
                       weekdays: _weekdays,
-                      weekCount: _weekCount,
+                      maxPages: _maxItems,
                       onDateChanged: (date) => _selectedDate.value = date,
                     ),
                     MonthlyView(
                       initialDate: _selectedDate.value,
                       weekdays: _weekdays,
-                      weekCount: _weekCount,
+                      maxItems: _maxItems,
                       onDateChanged: (date) => _selectedDate.value = date,
                     ),
                   ],

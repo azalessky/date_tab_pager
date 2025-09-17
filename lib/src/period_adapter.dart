@@ -10,3 +10,35 @@ abstract class PeriodAdapter {
   DateTime subIndexToDate(DateTime pageDate, int subIndex);
   int dateToSubIndex(DateTime pageDate, DateTime date);
 }
+
+extension PeriodAdapterExtension on PeriodAdapter {
+  int pageCount(DateTime base, int maxPages) {
+    int total = maxPages;
+    int pages = 0;
+    DateTime current = base;
+
+    while (total > 0) {
+      final count = subCount(current);
+      if (count == 0) break;
+
+      pages++;
+      total -= count;
+      current = pageToDate(current, 1);
+    }
+
+    return pages;
+  }
+
+  int itemCount(DateTime base, int maxPages) {
+    int pages = pageCount(base, maxPages);
+    int items = 0;
+    DateTime current = base;
+
+    for (int i = 0; i < pages; i++) {
+      items += subCount(current);
+      current = pageToDate(current, 1);
+    }
+
+    return items;
+  }
+}

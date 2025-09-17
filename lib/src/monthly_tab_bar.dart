@@ -11,6 +11,7 @@ class MonthlyTabBar extends StatelessWidget {
   final SyncController sync;
   final List<int> weekdays;
   final double height;
+  final int maxItems;
   final TabBuilder tabBuilder;
   final DateTimeCallback? onTabScrolled;
   final DateTimeCallback? onTabChanged;
@@ -20,6 +21,7 @@ class MonthlyTabBar extends StatelessWidget {
     required this.sync,
     required this.weekdays,
     this.height = 48.0,
+    this.maxItems = 2000,
     required this.tabBuilder,
     this.onTabScrolled,
     this.onTabChanged,
@@ -33,6 +35,7 @@ class MonthlyTabBar extends StatelessWidget {
       sync: sync,
       adapter: MonthlyAdapter(weekdays: weekdays),
       height: height,
+      maxItems: maxItems,
       tabBuilder: tabBuilder,
       onTabScrolled: onTabScrolled,
       onTabChanged: onTabChanged,

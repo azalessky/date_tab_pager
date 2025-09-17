@@ -10,6 +10,7 @@ class WeeklyTabView extends StatelessWidget {
   final PositionController controller;
   final SyncController sync;
   final List<int> weekdays;
+  final int maxPages;
   final PageBuilder pageBuilder;
   final DateTimeCallback? onPageChanged;
 
@@ -17,6 +18,7 @@ class WeeklyTabView extends StatelessWidget {
     required this.controller,
     required this.sync,
     required this.weekdays,
+    this.maxPages = 2000,
     required this.pageBuilder,
     this.onPageChanged,
     super.key,
@@ -28,6 +30,7 @@ class WeeklyTabView extends StatelessWidget {
       controller: controller,
       sync: sync,
       adapter: WeeklyAdapter(weekdays: weekdays),
+      maxItems: maxPages,
       pageBuilder: pageBuilder,
       onPageChanged: onPageChanged,
     );

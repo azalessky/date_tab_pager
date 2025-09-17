@@ -21,19 +21,17 @@ class WeeklyAdapter implements PeriodAdapter {
     final weeksOffset = (index >= 0) ? index ~/ length : ((index + 1) ~/ length) - 1;
     final subIndex = index - weeksOffset * length;
 
-    final weekStart = base.add(Duration(days: weeksOffset * 7));
-    return weekStart.add(Duration(days: weekdays[subIndex] - weekdays.first));
+    final weekStart = base.add(Duration(days: weeksOffset * 7)).weekStart(weekdays);
+    final day = weekdays[subIndex];
+    return weekStart.add(Duration(days: day - 1));
   }
 
   @override
   int dateToIndex(DateTime base, DateTime date) {
     final diffDays = date.difference(base).inDays;
     final weeksOffset = (diffDays >= 0) ? diffDays ~/ 7 : ((diffDays + 1) ~/ 7) - 1;
-    final weekStart = base.add(Duration(days: weeksOffset * 7));
 
-    final dayOffset = date.difference(weekStart).inDays;
-    final subIndex = weekdays.indexWhere((d) => d - weekdays.first == dayOffset);
-
+    final subIndex = weekdays.indexOf(date.weekday);
     return weeksOffset * weekdays.length + subIndex;
   }
 
@@ -41,8 +39,11 @@ class WeeklyAdapter implements PeriodAdapter {
   int subCount(DateTime pageDate) => weekdays.length;
 
   @override
-  DateTime subIndexToDate(DateTime pageDate, int subIndex) =>
-      pageDate.add(Duration(days: weekdays[subIndex] - weekdays.first));
+  DateTime subIndexToDate(DateTime pageDate, int subIndex) {
+    final weekStart = pageDate.weekStart(weekdays);
+    final day = weekdays[subIndex];
+    return weekStart.add(Duration(days: day - 1));
+  }
 
   @override
   int dateToSubIndex(DateTime pageDate, DateTime date) => weekdays.indexOf(date.weekday);

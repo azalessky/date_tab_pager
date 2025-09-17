@@ -31,9 +31,9 @@ class MonthlyAdapter implements PeriodAdapter {
 
   @override
   int dateToSubIndex(DateTime pageDate, DateTime date) {
-    final weekIndex = (date.day - 1) ~/ 7;
-    if (weekIndex < 0 || weekIndex >= subCount(pageDate)) return -1;
-    return weekIndex;
+    final weeks = _weeks(pageDate);
+    final index = weeks.indexWhere((d) => d.isSameWeek(date));
+    return index >= 0 ? index : 0;
   }
 
   List<DateTime> _weeks(DateTime monthStart) {

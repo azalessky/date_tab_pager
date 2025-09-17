@@ -10,6 +10,7 @@ class MonthlyTabView extends StatelessWidget {
   final PositionController controller;
   final SyncController sync;
   final List<int> weekdays;
+  final int maxItems;
   final PageBuilder pageBuilder;
   final DateTimeCallback? onPageChanged;
 
@@ -17,6 +18,7 @@ class MonthlyTabView extends StatelessWidget {
     required this.controller,
     required this.sync,
     required this.weekdays,
+    this.maxItems = 2000,
     required this.pageBuilder,
     this.onPageChanged,
     super.key,
@@ -28,6 +30,7 @@ class MonthlyTabView extends StatelessWidget {
       controller: controller,
       sync: sync,
       adapter: MonthlyAdapter(weekdays: weekdays),
+      maxItems: maxItems,
       pageBuilder: pageBuilder,
       onPageChanged: onPageChanged,
     );
