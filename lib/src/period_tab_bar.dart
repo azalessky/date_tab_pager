@@ -166,7 +166,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
       final index = tabController.index;
       final offset = widget.sync.offset.value;
 
-      if (!tabController.indexIsChanging && offset != 0 && offset.abs() < 1) {
+      if (!tabController.indexIsChanging && offset.abs() < 1) {
         if (index == 0 && offset < 0) return;
         if (index == tabController.length - 1 && offset > 0) return;
         tabController.offset = offset;
