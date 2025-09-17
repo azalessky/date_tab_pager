@@ -50,7 +50,6 @@ class _WeeklyViewState extends State<WeeklyView> with TickerProviderStateMixin {
         WeeklyTabBar(
           controller: _controller,
           sync: _sync,
-          weekdays: widget.weekdays,
           tabBuilder: (_, date) => _buildTab(date),
           onTabScrolled: widget.onDateChanged,
           onTabChanged: widget.onDateChanged,
@@ -60,7 +59,6 @@ class _WeeklyViewState extends State<WeeklyView> with TickerProviderStateMixin {
           child: WeeklyTabView(
             controller: _controller,
             sync: _sync,
-            weekdays: widget.weekdays,
             pageBuilder: (_, date) => _buildPage(date),
             onPageChanged: widget.onDateChanged,
           ),
