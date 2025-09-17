@@ -43,7 +43,7 @@ class _MainAppState extends State<MainApp> {
                     WeeklyView(
                       initialDate: _selectedDate.value,
                       weekdays: _weekdays,
-                      maxPages: _maxItems,
+                      maxItems: _maxItems,
                       onDateChanged: (date) => _selectedDate.value = date,
                     ),
                     MonthlyView(

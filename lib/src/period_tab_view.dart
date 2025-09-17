@@ -12,7 +12,6 @@ class PeriodTabView extends StatefulWidget {
   final PositionController controller;
   final SyncController sync;
   final PeriodAdapter adapter;
-  final int maxItems;
   final PageBuilder pageBuilder;
   final DateTimeCallback? onPageChanged;
 
@@ -20,7 +19,6 @@ class PeriodTabView extends StatefulWidget {
     required this.controller,
     required this.sync,
     required this.adapter,
-    required this.maxItems,
     required this.pageBuilder,
     this.onPageChanged,
     super.key,
@@ -41,7 +39,7 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
     super.initState();
 
     _centerPage = widget.adapter.pageDate(widget.controller.position);
-    _itemCount = widget.adapter.itemCount(_centerPage, widget.maxItems);
+    _itemCount = widget.adapter.itemCount(_centerPage, widget.controller.maxItems);
     _centerIndex = _itemCount ~/ 2;
 
     final initialIndex =

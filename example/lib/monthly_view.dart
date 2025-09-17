@@ -31,6 +31,7 @@ class _MonthlyViewState extends State<MonthlyView> with TickerProviderStateMixin
     _controller = PositionController(
       position: widget.initialDate,
       weekdays: widget.weekdays,
+      maxItems: widget.maxItems,
     );
     _sync = SyncController();
   }
@@ -50,7 +51,6 @@ class _MonthlyViewState extends State<MonthlyView> with TickerProviderStateMixin
           controller: _controller,
           sync: _sync,
           weekdays: widget.weekdays,
-          maxItems: widget.maxItems,
           tabBuilder: (_, date) => _buildTab(date),
           onTabScrolled: widget.onDateChanged,
           onTabChanged: widget.onDateChanged,
@@ -60,7 +60,6 @@ class _MonthlyViewState extends State<MonthlyView> with TickerProviderStateMixin
           child: MonthlyTabView(
             controller: _controller,
             sync: _sync,
-            maxItems: widget.maxItems,
             weekdays: widget.weekdays,
             pageBuilder: (_, date) => _buildPage(date),
             onPageChanged: widget.onDateChanged,

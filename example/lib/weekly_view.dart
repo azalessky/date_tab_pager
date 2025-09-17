@@ -6,13 +6,13 @@ import 'package:weekly_tab_pager/weekly_tab_pager.dart';
 class WeeklyView extends StatefulWidget {
   final DateTime initialDate;
   final List<int> weekdays;
-  final int maxPages;
+  final int maxItems;
   final void Function(DateTime date)? onDateChanged;
 
   const WeeklyView({
     required this.initialDate,
     required this.weekdays,
-    required this.maxPages,
+    required this.maxItems,
     this.onDateChanged,
     super.key,
   });
@@ -31,6 +31,7 @@ class _WeeklyViewState extends State<WeeklyView> with TickerProviderStateMixin {
     _controller = PositionController(
       position: widget.initialDate,
       weekdays: widget.weekdays,
+      maxItems: widget.maxItems,
     );
     _sync = SyncController();
   }
@@ -50,7 +51,6 @@ class _WeeklyViewState extends State<WeeklyView> with TickerProviderStateMixin {
           controller: _controller,
           sync: _sync,
           weekdays: widget.weekdays,
-          maxPages: widget.maxPages,
           tabBuilder: (_, date) => _buildTab(date),
           onTabScrolled: widget.onDateChanged,
           onTabChanged: widget.onDateChanged,
@@ -61,7 +61,6 @@ class _WeeklyViewState extends State<WeeklyView> with TickerProviderStateMixin {
             controller: _controller,
             sync: _sync,
             weekdays: widget.weekdays,
-            maxPages: widget.maxPages,
             pageBuilder: (_, date) => _buildPage(date),
             onPageChanged: widget.onDateChanged,
           ),

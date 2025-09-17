@@ -13,7 +13,6 @@ class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
   final SyncController sync;
   final PeriodAdapter adapter;
   final double height;
-  final int maxItems;
   final TabBuilder tabBuilder;
   final DateTimeCallback? onTabScrolled;
   final DateTimeCallback? onTabChanged;
@@ -23,7 +22,6 @@ class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
     required this.sync,
     required this.adapter,
     required this.height,
-    required this.maxItems,
     required this.tabBuilder,
     this.onTabScrolled,
     this.onTabChanged,
@@ -49,7 +47,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     super.initState();
 
     _centerPage = widget.adapter.pageDate(widget.controller.position);
-    _pageCount = widget.adapter.pageCount(_centerPage, widget.maxItems);
+    _pageCount = widget.adapter.pageCount(_centerPage, widget.controller.maxItems);
     _centerIndex = _pageCount ~/ 2;
     _pageController = PageController(initialPage: _centerIndex);
 
