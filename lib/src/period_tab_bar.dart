@@ -150,9 +150,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     );
 
     final tabController = _tabControllers[pageIndex];
-    if (tabController != null) {
-      tabController.animateTo(subIndex);
-    }
+    if (tabController != null) tabController.index = subIndex;
   }
 
   void _syncTabOffset() {
@@ -164,7 +162,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
       final index = tabController.index;
       final offset = widget.sync.offset.value;
 
-      if (!tabController.indexIsChanging && offset < 1 && offset > -1) {
+      if (!tabController.indexIsChanging && offset != 0) {
         if (index == 0 && offset < 0) return;
         if (index == tabController.length - 1 && offset > 0) return;
         tabController.offset = offset;

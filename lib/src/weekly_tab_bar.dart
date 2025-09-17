@@ -7,11 +7,10 @@ import 'position_controller.dart';
 import 'sync_controller.dart';
 
 class WeeklyTabBar extends StatelessWidget {
-  static const widgetHeight = 70.0;
-
   final PositionController controller;
   final SyncController sync;
   final List<int> weekdays;
+  final double height;
   final TabBuilder tabBuilder;
   final DateTimeCallback? onTabScrolled;
   final DateTimeCallback? onTabChanged;
@@ -20,6 +19,7 @@ class WeeklyTabBar extends StatelessWidget {
     required this.controller,
     required this.sync,
     required this.weekdays,
+    this.height = 70.0,
     required this.tabBuilder,
     this.onTabScrolled,
     this.onTabChanged,
@@ -32,7 +32,7 @@ class WeeklyTabBar extends StatelessWidget {
       controller: controller,
       sync: sync,
       adapter: WeeklyAdapter(weekdays: weekdays),
-      height: widgetHeight,
+      height: height,
       tabBuilder: tabBuilder,
       onTabScrolled: onTabScrolled,
       onTabChanged: onTabChanged,

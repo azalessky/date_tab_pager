@@ -94,12 +94,14 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
     final index = _tabController.index - _centerIndex;
     final date = widget.adapter.indexToDate(_centerPage, index);
 
-    widget.controller.animateTo(date);
-    widget.onPageChanged?.call(date);
+    if (widget.controller.position != date) {
+      widget.controller.animateTo(date);
+      widget.onPageChanged?.call(date);
+    }
   }
 
   void _syncTabOffset() {
     final offset = _tabController.offset;
-    if (offset != 0) widget.sync.offset.value = offset;
+    widget.sync.offset.value = offset;
   }
 }
