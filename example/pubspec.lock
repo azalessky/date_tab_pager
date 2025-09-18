@@ -41,6 +41,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  date_tab_pager:
+    dependency: "direct main"
+    description:
+      path: ".."
+      relative: true
+    source: path
+    version: "0.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -208,13 +215,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "15.0.0"
-  weekly_tab_pager:
-    dependency: "direct main"
-    description:
-      path: ".."
-      relative: true
-    source: path
-    version: "0.0.9"
 sdks:
   dart: ">=3.8.0 <4.0.0"
   flutter: ">=3.18.0-18.0.pre.54"

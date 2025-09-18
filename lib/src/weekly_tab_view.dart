@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'data_types.dart';
 import 'period_tab_view.dart';
-import 'position_controller.dart';
-import 'sync_controller.dart';
 import 'weekly_adapter.dart';
+import 'date_controller.dart';
+import 'sync_controller.dart';
 
 class WeeklyTabView extends PeriodTabView {
   const WeeklyTabView._({

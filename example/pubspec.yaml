@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.20.2
-  weekly_tab_pager:
+  date_tab_pager:
     path: ..
 
 dev_dependencies:

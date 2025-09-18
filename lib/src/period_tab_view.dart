@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'data_types.dart';
 import 'period_adapter.dart';
-import 'position_controller.dart';
+import 'date_controller.dart';
 import 'sync_controller.dart';
 
 class PeriodTabView extends StatefulWidget {

@@ -1,10 +1,10 @@
-name: weekly_tab_pager
-description: Customizable TabBar component with integrated TabView that displays weekdays and allows for infinite scrolling by week.
+name: date_tab_pager
+description: Customizable TabBar component with integrated TabView that displays dates and allows for infinite scrolling.
 
-repository: https://github.com/azalessky/weekly_tab_pager
-issue_tracker: https://github.com/azalessky/weekly_tab_pager/issues
+repository: https://github.com/azalessky/date_tab_pager
+issue_tracker: https://github.com/azalessky/date_tab_pager/issues
 
-version: 0.0.9
+version: 0.0.1
 homepage: https://indentix.com
 topics:
   - scrollable

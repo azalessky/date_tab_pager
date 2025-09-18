@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'data_types.dart';
 import 'period_tab_bar.dart';
-import 'monthly_adapter.dart';
-import 'position_controller.dart';
+import 'daily_adapter.dart';
+import 'date_controller.dart';
 import 'sync_controller.dart';
+import 'data_types.dart';
 
-class MonthlyTabBar extends PeriodTabBar {
-  const MonthlyTabBar._({
+class DailyTabBar extends PeriodTabBar {
+  const DailyTabBar._({
     required super.controller,
     required super.sync,
     required super.adapter,
@@ -18,20 +18,20 @@ class MonthlyTabBar extends PeriodTabBar {
     super.key,
   });
 
-  factory MonthlyTabBar({
+  factory DailyTabBar({
     required PositionController controller,
     required SyncController sync,
-    double height = 48.0,
+    double height = 70.0,
     required TabBuilder tabBuilder,
     DateTimeCallback? onTabScrolled,
     DateTimeCallback? onTabChanged,
     Key? key,
   }) =>
-      MonthlyTabBar._(
+      DailyTabBar._(
         controller: controller,
         sync: sync,
         tabBuilder: tabBuilder,
-        adapter: MonthlyAdapter(weekdays: controller.weekdays),
+        adapter: DailyAdapter(weekdays: controller.weekdays),
         height: height,
         onTabScrolled: onTabScrolled,
         onTabChanged: onTabChanged,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import 'package:weekly_tab_pager/weekly_tab_pager.dart';
+import 'package:date_tab_pager/date_tab_pager.dart';
 
 class WeeklyView extends StatefulWidget {
   final DateTime initialDate;
@@ -10,24 +9,25 @@ class WeeklyView extends StatefulWidget {
   final void Function(DateTime date)? onDateChanged;
 
   const WeeklyView({
+    super.key,
     required this.initialDate,
     required this.weekdays,
     required this.maxItems,
     this.onDateChanged,
-    super.key,
   });
 
   @override
   State<WeeklyView> createState() => _WeeklyViewState();
 }
 
-class _WeeklyViewState extends State<WeeklyView> with TickerProviderStateMixin {
+class _WeeklyViewState extends State<WeeklyView> {
   late PositionController _controller;
   late SyncController _sync;
 
   @override
   void initState() {
     super.initState();
+
     _controller = PositionController(
       position: widget.initialDate,
       weekdays: widget.weekdays,
@@ -73,31 +73,37 @@ class _WeeklyViewState extends State<WeeklyView> with TickerProviderStateMixin {
   }
 
   Widget _buildTab(DateTime date) {
-    final child = Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(DateFormat('E').format(date).toUpperCase()),
-        const SizedBox(height: 4),
-        Text(date.day.toString()),
-      ],
+    final start = _weekStart(date, widget.weekdays);
+    final end = _weekEnd(date, widget.weekdays);
+    return Center(
+      child: Text(
+        '${start.day}–${end.day}',
+        overflow: TextOverflow.ellipsis,
+      ),
     );
-    return date.weekday >= 6
-        ? DefaultTextStyle.merge(style: const TextStyle(color: Colors.red), child: child)
-        : child;
   }
 
   Widget _buildPage(DateTime date) {
+    final start = _weekStart(date, widget.weekdays);
+    final end = _weekEnd(date, widget.weekdays);
     return Card(
       elevation: 4,
       margin: const EdgeInsets.all(16),
       child: Center(
         child: Text(
-          DateFormat.yMMMMd().format(date),
+          'Start: ${DateFormat.yMMMMd().format(start)}\nEnd: ${DateFormat.yMMMMd().format(end)}',
+          textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
     );
   }
+
+  DateTime _weekStart(DateTime date, List<int> days) =>
+      date.add(Duration(days: days.first - date.weekday));
+
+  DateTime _weekEnd(DateTime date, List<int> days) =>
+      date.add(Duration(days: days.last - date.weekday));
 
   void _resetPosition() {
     _controller.animateTo(DateTime.now());

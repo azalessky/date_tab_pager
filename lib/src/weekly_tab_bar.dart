@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'data_types.dart';
 import 'period_tab_bar.dart';
 import 'weekly_adapter.dart';
-import 'position_controller.dart';
+import 'date_controller.dart';
 import 'sync_controller.dart';
-import 'data_types.dart';
 
 class WeeklyTabBar extends PeriodTabBar {
   const WeeklyTabBar._({
@@ -21,7 +21,7 @@ class WeeklyTabBar extends PeriodTabBar {
   factory WeeklyTabBar({
     required PositionController controller,
     required SyncController sync,
-    double height = 70.0,
+    double height = 48.0,
     required TabBuilder tabBuilder,
     DateTimeCallback? onTabScrolled,
     DateTimeCallback? onTabChanged,

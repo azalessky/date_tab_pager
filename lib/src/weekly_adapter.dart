@@ -1,5 +1,5 @@
-import 'period_adapter.dart';
 import 'date_time_extension.dart';
+import 'period_adapter.dart';
 
 class WeeklyAdapter implements PeriodAdapter {
   final List<int> weekdays;
@@ -7,41 +7,52 @@ class WeeklyAdapter implements PeriodAdapter {
   const WeeklyAdapter({required this.weekdays});
 
   @override
-  int pageSize(DateTime date) => weekdays.length;
+  int pageSize(DateTime date) => _weeks(date).length;
 
   @override
-  DateTime pageDate(DateTime date) => date.weekStart(weekdays);
+  DateTime pageDate(DateTime date) => DateTime(date.year, date.month, 1);
 
   @override
-  DateTime pageToDate(DateTime base, int page) => base.add(Duration(days: page * 7));
+  DateTime pageToDate(DateTime base, int page) => DateTime(base.year, base.month + page, 1);
 
   @override
-  int dateToPage(DateTime base, DateTime date) => date.differenceInWeeks(base);
+  int dateToPage(DateTime base, DateTime date) =>
+      (date.year - base.year) * 12 + (date.month - base.month);
 
   @override
-  DateTime indexToDate(DateTime base, int index) {
-    final length = weekdays.length;
-    final weeksOffset = (index >= 0) ? index ~/ length : ((index + 1) ~/ length) - 1;
-    final subIndex = index - weeksOffset * length;
+  DateTime indexToDate(DateTime base, int index) => base.add(Duration(days: index * 7));
 
-    final weekStart = base.add(Duration(days: weeksOffset * 7)).weekStart(weekdays);
-    final day = weekdays[subIndex];
-    return weekStart.add(Duration(days: day - weekdays.first));
+  @override
+  int dateToIndex(DateTime base, DateTime date) => date.differenceInWeeks(base);
+
+  @override
+  DateTime subIndexToDate(DateTime pageDate, int subIndex) => _weeks(pageDate)[subIndex];
+
+  @override
+  int dateToSubIndex(DateTime pageDate, DateTime date) {
+    final weeks = _weeks(pageDate);
+    final index = weeks.indexWhere((d) => d.isSameWeek(date));
+    return index >= 0 ? index : 0;
   }
 
-  @override
-  int dateToIndex(DateTime base, DateTime date) {
-    final diffDays = date.difference(base).inDays;
-    final weeksOffset = (diffDays >= 0) ? diffDays ~/ 7 : ((diffDays + 1) ~/ 7) - 1;
+  List<DateTime> _weeks(DateTime monthStart) {
+    final firstDay = DateTime(monthStart.year, monthStart.month, 1);
+    final lastDay = DateTime(monthStart.year, monthStart.month + 1, 0);
 
-    final subIndex = weekdays.indexOf(date.weekday);
-    return weeksOffset * weekdays.length + subIndex;
+    final weeks = <DateTime>[];
+    int firstWeekday = weekdays.first;
+
+    var current = firstDay;
+    if (current.weekday != firstWeekday) {
+      final delta = (firstWeekday - current.weekday + 7) % 7;
+      current = current.add(Duration(days: delta));
+    }
+
+    while (current.isBefore(lastDay.add(const Duration(days: 1)))) {
+      weeks.add(current);
+      current = current.add(const Duration(days: 7));
+    }
+
+    return weeks;
   }
-
-  @override
-  DateTime subIndexToDate(DateTime pageDate, int subIndex) =>
-      pageDate.add(Duration(days: weekdays[subIndex] - weekdays.first));
-
-  @override
-  int dateToSubIndex(DateTime pageDate, DateTime date) => weekdays.indexOf(date.weekday);
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'daily_view.dart';
 import 'weekly_view.dart';
-import 'monthly_view.dart';
 
 void main() => runApp(const MainApp());
 
@@ -14,7 +14,7 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  final _weekdays = [4, 5, 7];
+  final _weekdays = [1, 3, 5, 6, 7];
   final _maxItems = 2000;
   final _selectedDate = ValueNotifier(DateTime.now());
   int _selectedView = 0;
@@ -40,13 +40,13 @@ class _MainAppState extends State<MainApp> {
                 child: IndexedStack(
                   index: _selectedView,
                   children: [
-                    WeeklyView(
+                    DailyView(
                       initialDate: _selectedDate.value,
                       weekdays: _weekdays,
                       maxItems: _maxItems,
                       onDateChanged: (date) => _selectedDate.value = date,
                     ),
-                    MonthlyView(
+                    WeeklyView(
                       initialDate: _selectedDate.value,
                       weekdays: _weekdays,
                       maxItems: _maxItems,
