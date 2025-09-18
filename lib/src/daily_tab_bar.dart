@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'period_tab_bar.dart';
 import 'daily_adapter.dart';
-import 'date_controller.dart';
+import 'position_controller.dart';
 import 'sync_controller.dart';
 import 'data_types.dart';
 
