@@ -33,6 +33,7 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
   late int _centerIndex;
   late int _itemCount;
   late TabController _tabController;
+  bool _isAnimating = false;
 
   @override
   void initState() {
@@ -50,7 +51,7 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
     _tabController.animation?.addListener(_syncTabOffset);
 
     widget.controller.addListener(_updatePosition);
-    widget.sync.position.addListener(_updatePosition);
+    widget.sync.barPosition.addListener(_updatePosition);
   }
 
   @override
@@ -60,7 +61,7 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
     _tabController.dispose();
 
     widget.controller.removeListener(_updatePosition);
-    widget.sync.position.removeListener(_updatePosition);
+    widget.sync.barPosition.removeListener(_updatePosition);
 
     super.dispose();
   }
@@ -81,11 +82,15 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
 
   void _updatePosition() {
     final pageIndex = widget.adapter.dateToIndex(_centerPage, widget.controller.position);
+
+    _isAnimating = true;
     _tabController.animateTo(
       _centerIndex + pageIndex,
       duration: PeriodTabView.animationDuration,
       curve: PeriodTabView.animationCurve,
     );
+
+    Future.delayed(PeriodTabView.animationDuration, () => _isAnimating = false);
   }
 
   void _syncTabIndex() {
@@ -93,13 +98,16 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
     final date = widget.adapter.indexToDate(_centerPage, index);
 
     if (widget.controller.position != date) {
-      widget.controller.animateTo(date);
+      widget.controller.setPosition(date);
+      widget.sync.viewPosition.value = date;
       widget.onPageChanged?.call(date);
     }
   }
 
   void _syncTabOffset() {
-    final offset = _tabController.offset;
-    widget.sync.offset.value = offset;
+    if (!_isAnimating) {
+      final offset = _tabController.offset;
+      widget.sync.viewOffset.value = offset;
+    }
   }
 }

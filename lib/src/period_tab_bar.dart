@@ -52,7 +52,8 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     _pageController = PageController(initialPage: _centerIndex);
 
     widget.controller.addListener(_updatePosition);
-    widget.sync.offset.addListener(_syncTabOffset);
+    widget.sync.viewPosition.addListener(_updatePosition);
+    widget.sync.viewOffset.addListener(_syncTabOffset);
   }
 
   @override
@@ -62,7 +63,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     _tabControllers.clear();
 
     widget.controller.removeListener(_updatePosition);
-    widget.sync.offset.removeListener(_syncTabOffset);
+    widget.sync.viewOffset.removeListener(_syncTabOffset);
 
     super.dispose();
   }
@@ -119,7 +120,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
       onTap: (index) => setState(() {
         final date = widget.adapter.subIndexToDate(pageDate, index);
         widget.controller.setPosition(date);
-        widget.sync.position.value = date;
+        widget.sync.barPosition.value = date;
         widget.onTabChanged?.call(date);
       }),
     );
@@ -152,7 +153,9 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     );
 
     final tabController = _tabControllers[pageIndex];
-    if (tabController != null) tabController.index = subIndex;
+    if (tabController != null) {
+      tabController.index = subIndex;
+    }
   }
 
   void _syncTabOffset() {
@@ -160,15 +163,15 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     final pageIndex = _centerIndex + pageOffset;
 
     final tabController = _tabControllers[pageIndex];
-    if (tabController != null) {
-      final index = tabController.index;
-      final offset = widget.sync.offset.value;
+    if (tabController == null) return;
 
-      if (!tabController.indexIsChanging && offset.abs() < 1) {
-        if (index == 0 && offset < 0) return;
-        if (index == tabController.length - 1 && offset > 0) return;
-        tabController.offset = offset;
-      }
+    final index = tabController.index;
+    final offset = widget.sync.viewOffset.value;
+
+    if (!tabController.indexIsChanging && offset.abs() < 1) {
+      if (index == 0 && offset < 0) return;
+      if (index == tabController.length - 1 && offset > 0) return;
+      tabController.offset = offset;
     }
   }
 }

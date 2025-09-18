@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 
 class SyncController {
-  final ValueNotifier<DateTime> position;
-  final ValueNotifier<double> offset;
+  final AlwaysNotifier<DateTime> barPosition;
+  final AlwaysNotifier<DateTime> viewPosition;
+  final AlwaysNotifier<double> viewOffset;
 
   SyncController()
-      : position = ValueNotifier(DateTime.now()),
-        offset = ValueNotifier(0);
+      : barPosition = AlwaysNotifier(DateTime.now()),
+        viewPosition = AlwaysNotifier(DateTime.now()),
+        viewOffset = AlwaysNotifier(0);
 
   void dispose() {
-    position.dispose();
-    offset.dispose();
+    barPosition.dispose();
+    viewPosition.dispose();
+    viewOffset.dispose();
+  }
+}
+
+class AlwaysNotifier<T> extends ValueNotifier<T> {
+  AlwaysNotifier(super.value);
+
+  @override
+  set value(T value) {
+    super.value = value;
+    notifyListeners();
   }
 }
