@@ -1,21 +1,20 @@
-## Weekly Tab Pager
+## Date Tab Pager
 
-Customizable TabBar component with integrated TabView that displays weekdays and allows for infinite scrolling by week.
+Date-driven TabBar and TabView with linked navigation and infinite scroll.
 
 This component is used in the real-world application Student Planner (<a href="https://play.google.com/store/apps/details?id=com.indentix.studentplanner">Android</a>).
 
 Feel free to use this library if you find it useful!
 
- <img src="https://raw.githubusercontent.com/npopok/weekly_tab_pager/main/demo.gif" height="400"/>
+ <img src="https://raw.githubusercontent.com/azalessky/weekly_tab_pager/main/demo.gif" height="400"/>
 
 ## Features
 
- - TabBar and TabView connected together
- - Single controller for navigation
- - Smooth animiaton during scrolling
- - Infinite scrolling in both directions 
- - Specified days of week in tabs
- - Callbacks for tab/page changes
+ - Synchronized TabBar and TabView with a single controller
+ - Smooth animated navigation between tabs and pages
+ - Infinite scroll in both directions (past & future)
+ - Flexible tab modes: display daily or weekly tabs
+ - Callbacks for tab/page changes for full control
 
 ## Usage
 
@@ -23,11 +22,11 @@ Add the following line to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  weekly_tab_pager: ^0.0.9
+  weekly_tab_pager: ^0.0.1
 ```
 Import the package in your code:
 ```dart
-import 'package:weekly_tab_pager/weekly_tab_pager.dart';
+import 'package:date_tab_pager/date_tab_pager.dart';
 ```
 
 Declare a controller for navigation:
@@ -91,4 +90,4 @@ Provide callbacks to listen navigator events:
   onPageChanged: (date) => ...,
 ```
 
-Make sure to check out [example](https://github.com/azalessky/weekly_tab_pager/tree/main/example) for more details.
+Make sure to check out [example](https://github.com/azalessky/date_tab_pager/tree/main/example) for more details.

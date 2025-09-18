@@ -1,5 +1,5 @@
 name: date_tab_pager
-description: Date-aware TabBar and TabView with linked navigation and infinite scroll.
+description: Date-driven TabBar and TabView with linked navigation and infinite scroll.
 
 repository: https://github.com/azalessky/date_tab_pager
 issue_tracker: https://github.com/azalessky/date_tab_pager/issues
