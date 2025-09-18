@@ -14,7 +14,7 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  final _weekdays = [1, 3, 5, 6];
+  final _weekdays = [4, 5, 7];
   final _maxItems = 2000;
   final _selectedDate = ValueNotifier(DateTime.now());
   int _selectedView = 0;
@@ -63,11 +63,9 @@ class _MainAppState extends State<MainApp> {
                 ],
                 selected: {_selectedView},
                 onSelectionChanged: (selection) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    setState(() {
-                      _selectedView = selection.first;
-                    });
-                  });
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    (_) => setState(() => _selectedView = selection.first),
+                  );
                 },
               ),
               const SizedBox(height: 100),

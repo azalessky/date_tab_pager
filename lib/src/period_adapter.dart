@@ -1,4 +1,5 @@
 abstract class PeriodAdapter {
+  int pageSize(DateTime date);
   DateTime pageDate(DateTime date);
   DateTime pageToDate(DateTime base, int page);
   int dateToPage(DateTime base, DateTime date);
@@ -6,7 +7,6 @@ abstract class PeriodAdapter {
   DateTime indexToDate(DateTime base, int index);
   int dateToIndex(DateTime base, DateTime date);
 
-  int subCount(DateTime pageDate);
   DateTime subIndexToDate(DateTime pageDate, int subIndex);
   int dateToSubIndex(DateTime pageDate, DateTime date);
 }
@@ -18,7 +18,7 @@ extension PeriodAdapterExtension on PeriodAdapter {
     DateTime current = base;
 
     while (total > 0) {
-      final count = subCount(current);
+      final count = pageSize(current);
       if (count == 0) break;
 
       pages++;
@@ -35,7 +35,7 @@ extension PeriodAdapterExtension on PeriodAdapter {
     DateTime current = base;
 
     for (int i = 0; i < pages; i++) {
-      items += subCount(current);
+      items += pageSize(current);
       current = pageToDate(current, 1);
     }
 

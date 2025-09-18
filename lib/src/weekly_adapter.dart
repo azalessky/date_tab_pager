@@ -7,6 +7,9 @@ class WeeklyAdapter implements PeriodAdapter {
   const WeeklyAdapter({required this.weekdays});
 
   @override
+  int pageSize(DateTime date) => weekdays.length;
+
+  @override
   DateTime pageDate(DateTime date) => date.weekStart(weekdays);
 
   @override
@@ -23,7 +26,7 @@ class WeeklyAdapter implements PeriodAdapter {
 
     final weekStart = base.add(Duration(days: weeksOffset * 7)).weekStart(weekdays);
     final day = weekdays[subIndex];
-    return weekStart.add(Duration(days: day - 1));
+    return weekStart.add(Duration(days: day - weekdays.first));
   }
 
   @override
@@ -36,14 +39,8 @@ class WeeklyAdapter implements PeriodAdapter {
   }
 
   @override
-  int subCount(DateTime pageDate) => weekdays.length;
-
-  @override
-  DateTime subIndexToDate(DateTime pageDate, int subIndex) {
-    final weekStart = pageDate.weekStart(weekdays);
-    final day = weekdays[subIndex];
-    return weekStart.add(Duration(days: day - 1));
-  }
+  DateTime subIndexToDate(DateTime pageDate, int subIndex) =>
+      pageDate.add(Duration(days: weekdays[subIndex] - weekdays.first));
 
   @override
   int dateToSubIndex(DateTime pageDate, DateTime date) => weekdays.indexOf(date.weekday);

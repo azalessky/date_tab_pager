@@ -84,7 +84,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
   }
 
   TabController _initTabController(int pageIndex, DateTime pageDate) {
-    final tabCount = widget.adapter.subCount(pageDate);
+    final tabCount = widget.adapter.pageSize(pageDate);
 
     var tabController = _tabControllers[pageIndex];
     if (tabController == null || tabController.length != tabCount) {
@@ -101,7 +101,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
   Widget _buildTabBar(int pageIndex) {
     final pageDate = widget.adapter.pageToDate(_centerPage, pageIndex - _centerIndex);
     final tabController = _initTabController(pageIndex, pageDate);
-    final tabCount = widget.adapter.subCount(pageDate);
+    final tabCount = widget.adapter.pageSize(pageDate);
     final isSelected = pageDate == widget.adapter.pageDate(widget.controller.position);
 
     return TabBar(

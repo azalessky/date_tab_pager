@@ -8,6 +8,9 @@ class MonthlyAdapter implements PeriodAdapter {
   const MonthlyAdapter({required this.weekdays});
 
   @override
+  int pageSize(DateTime date) => _weeks(date).length;
+
+  @override
   DateTime pageDate(DateTime date) => DateTime(date.year, date.month, 1);
 
   @override
@@ -22,9 +25,6 @@ class MonthlyAdapter implements PeriodAdapter {
 
   @override
   int dateToIndex(DateTime base, DateTime date) => date.differenceInWeeks(base);
-
-  @override
-  int subCount(DateTime pageDate) => _weeks(pageDate).length;
 
   @override
   DateTime subIndexToDate(DateTime pageDate, int subIndex) => _weeks(pageDate)[subIndex];
