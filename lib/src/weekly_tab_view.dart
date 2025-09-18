@@ -10,8 +10,8 @@ class WeeklyTabView extends PeriodTabView {
   const WeeklyTabView._({
     required super.controller,
     required super.sync,
-    required super.pageBuilder,
     required super.adapter,
+    required super.pageBuilder,
     super.onPageChanged,
     super.key,
   });

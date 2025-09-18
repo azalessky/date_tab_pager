@@ -10,8 +10,8 @@ class MonthlyTabBar extends PeriodTabBar {
   const MonthlyTabBar._({
     required super.controller,
     required super.sync,
-    required super.tabBuilder,
     required super.adapter,
+    required super.tabBuilder,
     required super.height,
     super.onTabScrolled,
     super.onTabChanged,

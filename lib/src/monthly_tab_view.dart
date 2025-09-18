@@ -10,8 +10,8 @@ class MonthlyTabView extends PeriodTabView {
   const MonthlyTabView._({
     required super.controller,
     required super.sync,
-    required super.pageBuilder,
     required super.adapter,
+    required super.pageBuilder,
     super.onPageChanged,
     super.key,
   });
