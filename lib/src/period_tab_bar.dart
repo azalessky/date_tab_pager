@@ -51,8 +51,8 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     _centerIndex = _pageCount ~/ 2;
     _pageController = PageController(initialPage: _centerIndex);
 
-    widget.controller.addListener(_updatePosition);
-    widget.sync.viewPosition.addListener(_updatePosition);
+    widget.controller.addListener(_updateFromContoller);
+    widget.sync.viewPosition.addListener(_updateFromView);
     widget.sync.viewOffset.addListener(_syncTabOffset);
   }
 
@@ -62,7 +62,8 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     _tabControllers.forEach((_, c) => c.dispose());
     _tabControllers.clear();
 
-    widget.controller.removeListener(_updatePosition);
+    widget.controller.removeListener(_updateFromContoller);
+    widget.sync.viewPosition.removeListener(_updateFromView);
     widget.sync.viewOffset.removeListener(_syncTabOffset);
 
     super.dispose();
@@ -140,7 +141,15 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
             Theme.of(context).textTheme.titleSmall;
   }
 
-  void _updatePosition() {
+  void _updateFromView() {
+    _updatePosition(false);
+  }
+
+  void _updateFromContoller() {
+    _updatePosition(true);
+  }
+
+  void _updatePosition(bool animate) {
     final pageOffset = widget.adapter.dateToPage(_centerPage, widget.controller.position);
     final pageDate = widget.adapter.pageToDate(_centerPage, pageOffset);
     final pageIndex = _centerIndex + pageOffset;
@@ -154,7 +163,11 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
 
     final tabController = _tabControllers[pageIndex];
     if (tabController != null) {
-      tabController.index = subIndex;
+      if (animate) {
+        tabController.animateTo(subIndex);
+      } else {
+        tabController.index = subIndex;
+      }
     }
   }
 

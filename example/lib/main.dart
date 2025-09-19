@@ -68,7 +68,7 @@ class _MainAppState extends State<MainApp> {
                   );
                 },
               ),
-              const SizedBox(height: 100),
+              const SizedBox(height: 200),
             ],
           ),
         ),

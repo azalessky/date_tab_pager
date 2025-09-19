@@ -92,7 +92,7 @@ class _DailyViewState extends State<DailyView> {
       child: Center(
         child: Text(
           DateFormat.yMMMMd().format(date),
-          style: Theme.of(context).textTheme.titleLarge,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ),
     );

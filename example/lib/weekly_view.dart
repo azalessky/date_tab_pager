@@ -86,14 +86,25 @@ class _WeeklyViewState extends State<WeeklyView> {
   Widget _buildPage(DateTime date) {
     final start = _weekStart(date, widget.weekdays);
     final end = _weekEnd(date, widget.weekdays);
+
+    final days = List<DateTime>.generate(
+      end.difference(start).inDays + 1,
+      (i) => start.add(Duration(days: i)),
+    ).where((d) => widget.weekdays.contains(d.weekday)).toList();
+
     return Card(
       elevation: 4,
       margin: const EdgeInsets.all(16),
-      child: Center(
-        child: Text(
-          'Start: ${DateFormat.yMMMMd().format(start)}\nEnd: ${DateFormat.yMMMMd().format(end)}',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleLarge,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: days
+              .map((day) => Text(
+                    DateFormat.yMMMMEEEEd().format(day),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ))
+              .toList(),
         ),
       ),
     );
