@@ -6,7 +6,9 @@ This component is used in the real-world application Student Planner (<a href="h
 
 Feel free to use this library if you find it useful!
 
- <img src="https://raw.githubusercontent.com/azalessky/weekly_tab_pager/main/demo.gif" height="400"/>
+ <img src="https://raw.githubusercontent.com/azalessky/weekly_tab_pager/main/daily-demo.gif" height="400"/>
+ 
+ <img src="https://raw.githubusercontent.com/azalessky/weekly_tab_pager/main/weekly-demo.gif" height="400"/>
 
 ## Features
 
