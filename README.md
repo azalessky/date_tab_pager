@@ -2,13 +2,25 @@
 
 Date-driven TabBar and TabView with linked navigation and infinite scroll.
 
-This component is used in the real-world application Student Planner (<a href="https://play.google.com/store/apps/details?id=com.indentix.studentplanner">Android</a>).
+This package replaces [`weekly_tab_pager`](https://pub.dev/packages/weekly_tab_pager), which is no longer maintained.
+
+The package is used in the real-world application [Student Planner](https://play.google.com/store/apps/details?id=com.indentix.studentplanner).
+
 
 Feel free to use this library if you find it useful!
 
- <img src="https://raw.githubusercontent.com/azalessky/weekly_tab_pager/main/daily-demo.gif" height="400"/>
- 
- <img src="https://raw.githubusercontent.com/azalessky/weekly_tab_pager/main/weekly-demo.gif" height="400"/>
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/azalessky/weekly_tab_pager/main/daily-demo.gif" height="400"/><br/>
+      <sub>Daily View</sub>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/azalessky/weekly_tab_pager/main/weekly-demo.gif" height="400"/><br/>
+      <sub>Weekly View</sub>
+    </td>
+  </tr>
+</table>
 
 ## Features
 
@@ -18,78 +30,108 @@ Feel free to use this library if you find it useful!
  - Flexible tab modes: display daily or weekly tabs
  - Callbacks for tab/page changes for full control
 
-## Usage
+## Installation
 
 Add the following line to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  weekly_tab_pager: ^0.0.1
+  date_tab_pager: ^0.0.1
 ```
 Import the package in your code:
 ```dart
 import 'package:date_tab_pager/date_tab_pager.dart';
 ```
 
-Declare a controller for navigation:
+## Usage
+
+### Step 1: Controller
+
+PositionController manages the current date and settings such as weekdays and maximum visible items.
 ```dart
-final controller = WeeklyTabController(
+final controller = PositionController(
   initialDate: DateTime.now(),
   weekdays: [1, 2, 3, 4, 5, 6],
-  weekCount: 100,
-  vsync: this,
+  maxItems: 100,
 );
 ```
 
-Add a tabbar and define how tabs will be built:
+### Step 2: Synchronization
+
+SyncController synchronizes offsets between TabBar and TabView to ensure smooth swipes update the controller correctly.
+```dart
+final sync = SyncController();
+```
+
+### Step 3: TabBar
+
+DailyTabBar builds daily tabs.
+```dart
+DailyTabBar(
+  controller: controller,
+  sync: sync,
+  tabBuilder: (context, date) => Text('${date.day}'),
+)
+```
+
+WeeklyTabBar builds weekly tabs.
 ```dart
 WeeklyTabBar(
-  controller: _controller,
-  tabBuilder: _buildTab,
+  controller: controller,
+  sync: sync,
+  tabBuilder: (context, date) => Text('Week ${weekNumber(date)}'),
 )
-
-Widget _buildTab(BuildContext context, DateTime date) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Text(DateFormat('E').format(date).toUpperCase()),
-      const SizedBox(height: 4),
-      Text(date.day.toString()),
-    ],
-  );
-}
 ```
 
-Add a tabview and define how pages will be built:
+### Step 4: TabView
+DailyTabView builds pages for each day.
+```dart
+DailyTabView(
+  controller: controller,
+  sync: sync,
+  pageBuilder: (context, date) => Center(child: Text('${date.day}')),
+)
+```
+
+WeeklyTabView builds pages for each week.
 ```dart
 WeeklyTabView(
-  controller: _controller,
-  pageBuilder: _buildPage,
+  controller: controller,
+  sync: sync,
+  pageBuilder: (context, date) => Center(child: Text('Week ${weekNumber(date)}')),
 )
+```
 
-Widget _buildPage(BuildContext context, DateTime date) {
-  return Card(
-    margin: const EdgeInsets.all(24),
-    child: Center(
-      child: Text(
-        DateFormat.yMMMMd().format(date),
-        style: Theme.of(context).textTheme.titleLarge,
+### Step 5: Integration
+
+Combine TabBar, TabView, PositionController, and SyncController for fully synchronized tabs and pages.
+
+```dart
+Column(
+  children: [
+    DailyTabBar(
+      controller: controller,
+      sync: sync, tabBuilder:
+      _buildTab,
+    ),
+    Expanded(
+      child: DailyTabView(
+        controller: controller,
+        sync: sync, 
+        pageBuilder: _buildPage,
       ),
     ),
-  );
-}
+  ],
+)
 ```
 
-Use a controller to navigate to the specific date:
-```dart
-  controller.animateTo(DateTime.now());
-```
+### Step 6: Callbacks
 
-Provide callbacks to listen navigator events:
+You can listen to navigation events:
 ```dart
-  onTabScrolled: (date) => ...,
-  onTabChanged: (date) => ...,
-  onPageChanged: (date) => ...,
+onTabScrolled: (date) => print('Tab scrolled to $date'),
+onTabChanged: (date) => print('Tab changed to $date'),
+onPageChanged: (date) => print('Page changed to $date'),
 ```
 
 Make sure to check out [example](https://github.com/azalessky/date_tab_pager/tree/main/example) for more details.
