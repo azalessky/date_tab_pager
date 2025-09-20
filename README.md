@@ -54,22 +54,24 @@ final controller = PositionController(
   weekdays: [1, 2, 3, 4, 5, 6],
   maxItems: 100,
 );
+controller.animateTo(DateTime.now());
 ```
 
 ### Step 2: Synchronization
 
-SyncController synchronizes offsets between TabBar and TabView to ensure smooth swipes update the controller correctly.
+SyncController provides two-way synchronization between TabBar and TabView, keeping the selected tab and the scroll position in sync for smooth interactions.
 ```dart
 final sync = SyncController();
 ```
 
-### Step 3: TabBar
+### Step 3: Tab Bar
 
 DailyTabBar builds daily tabs.
 ```dart
 DailyTabBar(
   controller: controller,
   sync: sync,
+  height: 48.0,
   tabBuilder: (context, date) => Text('${date.day}'),
 )
 ```
@@ -79,11 +81,12 @@ WeeklyTabBar builds weekly tabs.
 WeeklyTabBar(
   controller: controller,
   sync: sync,
+  height: 48.0,
   tabBuilder: (context, date) => Text('Week ${weekNumber(date)}'),
 )
 ```
 
-### Step 4: TabView
+### Step 4: Tab View
 DailyTabView builds pages for each day.
 ```dart
 DailyTabView(
