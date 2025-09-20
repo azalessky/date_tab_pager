@@ -4,7 +4,7 @@ description: Date-driven TabBar and TabView with linked navigation and infinite 
 repository: https://github.com/azalessky/date_tab_pager
 issue_tracker: https://github.com/azalessky/date_tab_pager/issues
 
-version: 0.0.1
+version: 0.0.2
 homepage: https://indentix.com
 topics:
   - scrollable

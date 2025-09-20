@@ -50,6 +50,7 @@ class _WeeklyViewState extends State<WeeklyView> {
         WeeklyTabBar(
           controller: _controller,
           sync: _sync,
+          height: 48.0,
           tabBuilder: (_, date) => _buildTab(date),
           onTabScrolled: widget.onDateChanged,
           onTabChanged: widget.onDateChanged,

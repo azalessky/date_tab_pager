@@ -13,6 +13,7 @@ class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
   final SyncController sync;
   final PeriodAdapter adapter;
   final double height;
+  final EdgeInsets? labelPadding;
   final TabBuilder tabBuilder;
   final DateTimeCallback? onTabScrolled;
   final DateTimeCallback? onTabChanged;
@@ -22,6 +23,7 @@ class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
     required this.sync,
     required this.adapter,
     required this.height,
+    this.labelPadding,
     required this.tabBuilder,
     this.onTabScrolled,
     this.onTabChanged,
@@ -111,6 +113,7 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
       indicator: isSelected ? null : const BoxDecoration(),
       labelColor: _labelColor(context, isSelected),
       labelStyle: _labelStyle(context, isSelected),
+      labelPadding: widget.labelPadding,
       tabs: List.generate(
         tabCount,
         (index) => widget.tabBuilder(
