@@ -49,7 +49,7 @@ class _DailyViewState extends State<DailyView> {
         DailyTabBar(
           controller: _controller,
           sync: _sync,
-          height: 70.0,
+          height: 72.0,
           tabBuilder: (_, date) => _buildTab(date),
           onTabScrolled: widget.onDateChanged,
           onTabChanged: widget.onDateChanged,
