@@ -37,7 +37,8 @@ class PeriodTabBar extends StatefulWidget implements PreferredSizeWidget {
   State<PeriodTabBar> createState() => _PeriodTabBarState();
 }
 
-class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMixin {
+class _PeriodTabBarState extends State<PeriodTabBar>
+    with TickerProviderStateMixin {
   late DateTime _centerPage;
   late int _centerIndex;
   late int _pageCount;
@@ -49,7 +50,8 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
     super.initState();
 
     _centerPage = widget.adapter.pageDate(widget.controller.position);
-    _pageCount = widget.adapter.pageCount(_centerPage, widget.controller.maxItems);
+    _pageCount =
+        widget.adapter.pageCount(_centerPage, widget.controller.maxItems);
     _centerIndex = _pageCount ~/ 2;
     _pageController = PageController(initialPage: _centerIndex);
 
@@ -80,7 +82,8 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
         itemCount: _pageCount,
         itemBuilder: (_, index) => _buildTabBar(index),
         onPageChanged: (index) {
-          final pageDate = widget.adapter.pageToDate(_centerPage, index - _centerIndex);
+          final pageDate =
+              widget.adapter.pageToDate(_centerPage, index - _centerIndex);
           widget.onTabScrolled?.call(pageDate);
         },
       ),
@@ -92,10 +95,12 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
 
     var tabController = _tabControllers[pageIndex];
     if (tabController == null || tabController.length != tabCount) {
-      final tabIndex = widget.adapter.dateToSubIndex(pageDate, widget.controller.position);
+      final tabIndex =
+          widget.adapter.dateToSubIndex(pageDate, widget.controller.position);
 
       tabController?.dispose();
-      tabController = TabController(initialIndex: tabIndex, length: tabCount, vsync: this);
+      tabController =
+          TabController(initialIndex: tabIndex, length: tabCount, vsync: this);
       _tabControllers[pageIndex] = tabController;
     }
 
@@ -103,10 +108,12 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
   }
 
   Widget _buildTabBar(int pageIndex) {
-    final pageDate = widget.adapter.pageToDate(_centerPage, pageIndex - _centerIndex);
+    final pageDate =
+        widget.adapter.pageToDate(_centerPage, pageIndex - _centerIndex);
     final tabController = _initTabController(pageIndex, pageDate);
     final tabCount = widget.adapter.pageSize(pageDate);
-    final isSelected = pageDate == widget.adapter.pageDate(widget.controller.position);
+    final isSelected =
+        pageDate == widget.adapter.pageDate(widget.controller.position);
 
     return TabBar(
       controller: tabController,
@@ -153,10 +160,12 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
   }
 
   void _updatePosition(bool animate) {
-    final pageOffset = widget.adapter.dateToPage(_centerPage, widget.controller.position);
+    final pageOffset =
+        widget.adapter.dateToPage(_centerPage, widget.controller.position);
     final pageDate = widget.adapter.pageToDate(_centerPage, pageOffset);
     final pageIndex = _centerIndex + pageOffset;
-    final subIndex = widget.adapter.dateToSubIndex(pageDate, widget.controller.position);
+    final subIndex =
+        widget.adapter.dateToSubIndex(pageDate, widget.controller.position);
 
     _pageController.animateToPage(
       pageIndex,
@@ -175,7 +184,8 @@ class _PeriodTabBarState extends State<PeriodTabBar> with TickerProviderStateMix
   }
 
   void _syncTabOffset() {
-    final pageOffset = widget.adapter.dateToPage(_centerPage, widget.controller.position);
+    final pageOffset =
+        widget.adapter.dateToPage(_centerPage, widget.controller.position);
     final pageIndex = _centerIndex + pageOffset;
 
     final tabController = _tabControllers[pageIndex];

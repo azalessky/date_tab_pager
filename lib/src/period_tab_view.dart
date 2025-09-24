@@ -28,7 +28,8 @@ class PeriodTabView extends StatefulWidget {
   State<PeriodTabView> createState() => _PeriodTabViewState();
 }
 
-class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateMixin {
+class _PeriodTabViewState extends State<PeriodTabView>
+    with TickerProviderStateMixin {
   late DateTime _centerPage;
   late int _centerIndex;
   late int _itemCount;
@@ -40,13 +41,15 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
     super.initState();
 
     _centerPage = widget.adapter.pageDate(widget.controller.position);
-    _itemCount = widget.adapter.itemCount(_centerPage, widget.controller.maxItems);
+    _itemCount =
+        widget.adapter.itemCount(_centerPage, widget.controller.maxItems);
     _centerIndex = _itemCount ~/ 2;
 
-    final initialIndex =
-        _centerIndex + widget.adapter.dateToIndex(_centerPage, widget.controller.position);
+    final initialIndex = _centerIndex +
+        widget.adapter.dateToIndex(_centerPage, widget.controller.position);
 
-    _tabController = TabController(initialIndex: initialIndex, length: _itemCount, vsync: this);
+    _tabController = TabController(
+        initialIndex: initialIndex, length: _itemCount, vsync: this);
     _tabController.addListener(_syncTabIndex);
     _tabController.animation?.addListener(_syncTabOffset);
 
@@ -73,7 +76,8 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
       children: List.generate(
         _itemCount,
         (index) {
-          final date = widget.adapter.indexToDate(_centerPage, index - _centerIndex);
+          final date =
+              widget.adapter.indexToDate(_centerPage, index - _centerIndex);
           return widget.pageBuilder(context, date);
         },
       ),
@@ -81,7 +85,8 @@ class _PeriodTabViewState extends State<PeriodTabView> with TickerProviderStateM
   }
 
   void _updatePosition() {
-    final pageIndex = widget.adapter.dateToIndex(_centerPage, widget.controller.position);
+    final pageIndex =
+        widget.adapter.dateToIndex(_centerPage, widget.controller.position);
 
     _isAnimating = true;
     _tabController.animateTo(

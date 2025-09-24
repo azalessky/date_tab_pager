@@ -13,20 +13,23 @@ class WeeklyAdapter implements PeriodAdapter {
   DateTime pageDate(DateTime date) => DateTime(date.year, date.month, 1);
 
   @override
-  DateTime pageToDate(DateTime base, int page) => DateTime(base.year, base.month + page, 1);
+  DateTime pageToDate(DateTime base, int page) =>
+      DateTime(base.year, base.month + page, 1);
 
   @override
   int dateToPage(DateTime base, DateTime date) =>
       (date.year - base.year) * 12 + (date.month - base.month);
 
   @override
-  DateTime indexToDate(DateTime base, int index) => base.add(Duration(days: index * 7));
+  DateTime indexToDate(DateTime base, int index) =>
+      base.add(Duration(days: index * 7));
 
   @override
   int dateToIndex(DateTime base, DateTime date) => date.differenceInWeeks(base);
 
   @override
-  DateTime subIndexToDate(DateTime pageDate, int subIndex) => _weeks(pageDate)[subIndex];
+  DateTime subIndexToDate(DateTime pageDate, int subIndex) =>
+      _weeks(pageDate)[subIndex];
 
   @override
   int dateToSubIndex(DateTime pageDate, DateTime date) {

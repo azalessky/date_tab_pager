@@ -30,7 +30,8 @@ class _MainAppState extends State<MainApp> {
         appBar: AppBar(
           title: ValueListenableBuilder<DateTime>(
             valueListenable: _selectedDate,
-            builder: (_, date, __) => Center(child: Text(DateFormat.MMMM().format(date))),
+            builder: (_, date, __) =>
+                Center(child: Text(DateFormat.MMMM().format(date))),
           ),
         ),
         body: SafeArea(

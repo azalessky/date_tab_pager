@@ -21,7 +21,8 @@ class PositionController extends ChangeNotifier {
   List<int> get weekdays => _weekdays;
   int get maxItems => _maxItems;
 
-  bool get isWeekChanged => _previous != null && !_position.isSameWeek(_previous!);
+  bool get isWeekChanged =>
+      _previous != null && !_position.isSameWeek(_previous!);
 
   void animateTo(DateTime date) {
     setPosition(date.safeDate(_weekdays));

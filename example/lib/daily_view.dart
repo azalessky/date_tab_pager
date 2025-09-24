@@ -82,7 +82,8 @@ class _DailyViewState extends State<DailyView> {
       ],
     );
     return date.weekday >= 6
-        ? DefaultTextStyle.merge(style: const TextStyle(color: Colors.red), child: child)
+        ? DefaultTextStyle.merge(
+            style: const TextStyle(color: Colors.red), child: child)
         : child;
   }
 
