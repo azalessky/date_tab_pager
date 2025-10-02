@@ -1,6 +1,7 @@
 abstract class PeriodAdapter {
   int pageSize(DateTime date);
-  DateTime pageDate(DateTime date);
+  DateTime pageStart(DateTime date);
+
   DateTime pageToDate(DateTime base, int page);
   int dateToPage(DateTime base, DateTime date);
 

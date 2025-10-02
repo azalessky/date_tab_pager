@@ -7,9 +7,7 @@ import 'date_time_extension.dart';
 class PositionController extends ChangeNotifier {
   final List<int> _weekdays;
   final int _maxItems;
-
   DateTime _position;
-  DateTime? _previous;
 
   /// Creates a [PositionController].
   /// [position] is the initial date position.
@@ -32,10 +30,6 @@ class PositionController extends ChangeNotifier {
   /// Maximum number of items visible in the view.
   int get maxItems => _maxItems;
 
-  /// True if the week has changed since the previous position.
-  bool get isWeekChanged =>
-      _previous != null && !_position.isSameWeek(_previous!);
-
   /// Animates to the specified [date] and notifies listeners.
   void animateTo(DateTime date) {
     setPosition(date.safeDate(_weekdays));
@@ -44,7 +38,6 @@ class PositionController extends ChangeNotifier {
 
   /// Sets the current position to [date] without notifying listeners.
   void setPosition(DateTime date) {
-    _previous = _position;
     _position = date;
   }
 }

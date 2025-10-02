@@ -59,8 +59,8 @@ class _MainAppState extends State<MainApp> {
               const SizedBox(height: 48),
               SegmentedButton<int>(
                 segments: const [
-                  ButtonSegment(value: 0, label: Text('Weekly View')),
-                  ButtonSegment(value: 1, label: Text('Monthly View')),
+                  ButtonSegment(value: 0, label: Text('Daily View')),
+                  ButtonSegment(value: 1, label: Text('Weekly View')),
                 ],
                 selected: {_selectedView},
                 onSelectionChanged: (selection) {

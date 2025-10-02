@@ -10,15 +10,18 @@ class WeeklyAdapter implements PeriodAdapter {
   int pageSize(DateTime date) => _weeks(date).length;
 
   @override
-  DateTime pageDate(DateTime date) => DateTime(date.year, date.month, 1);
+  DateTime pageStart(DateTime date) =>
+      date.weekStart(weekdays).monthStart(weekdays);
 
   @override
   DateTime pageToDate(DateTime base, int page) =>
-      DateTime(base.year, base.month + page, 1);
+      DateTime(base.year, base.month + page).monthStart(weekdays);
 
   @override
-  int dateToPage(DateTime base, DateTime date) =>
-      (date.year - base.year) * 12 + (date.month - base.month);
+  int dateToPage(DateTime base, DateTime date) {
+    final page = pageStart(date);
+    return (page.year - base.year) * 12 + (page.month - base.month);
+  }
 
   @override
   DateTime indexToDate(DateTime base, int index) =>
@@ -39,19 +42,10 @@ class WeeklyAdapter implements PeriodAdapter {
   }
 
   List<DateTime> _weeks(DateTime monthStart) {
-    final firstDay = DateTime(monthStart.year, monthStart.month, 1);
-    final lastDay = DateTime(monthStart.year, monthStart.month + 1, 0);
-
     final weeks = <DateTime>[];
-    int firstWeekday = weekdays.first;
+    var current = monthStart;
 
-    var current = firstDay;
-    if (current.weekday != firstWeekday) {
-      final delta = (firstWeekday - current.weekday + 7) % 7;
-      current = current.add(Duration(days: delta));
-    }
-
-    while (current.isBefore(lastDay.add(const Duration(days: 1)))) {
+    while (current.month == monthStart.month) {
       weeks.add(current);
       current = current.add(const Duration(days: 7));
     }

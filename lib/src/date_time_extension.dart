@@ -1,12 +1,16 @@
 import 'dart:math' as math;
 
 extension DateTimeExtension on DateTime {
-  DateTime weekStart(List<int> days) => add(Duration(
-        days: days.first - weekday,
-      ));
+  DateTime weekStart(List<int> weekdays) {
+    int delta = (weekday - weekdays.first + 7) % 7;
+    return subtract(Duration(days: delta));
+  }
 
-  bool isSameDay(DateTime other) =>
-      year == other.year && month == other.month && day == other.day;
+  DateTime monthStart(List<int> weekdays) {
+    final start = DateTime(year, month);
+    int delta = (weekdays.first - start.weekday + 7) % 7;
+    return start.add(Duration(days: delta));
+  }
 
   bool isSameWeek(DateTime other) =>
       DateTime(year, month, day - weekday) ==

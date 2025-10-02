@@ -10,7 +10,7 @@ class DailyAdapter implements PeriodAdapter {
   int pageSize(DateTime date) => weekdays.length;
 
   @override
-  DateTime pageDate(DateTime date) => date.weekStart(weekdays);
+  DateTime pageStart(DateTime date) => date.weekStart(weekdays);
 
   @override
   DateTime pageToDate(DateTime base, int page) =>

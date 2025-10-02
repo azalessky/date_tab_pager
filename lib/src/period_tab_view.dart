@@ -40,7 +40,7 @@ class _PeriodTabViewState extends State<PeriodTabView>
   void initState() {
     super.initState();
 
-    _centerPage = widget.adapter.pageDate(widget.controller.position);
+    _centerPage = widget.adapter.pageStart(widget.controller.position);
     _itemCount =
         widget.adapter.itemCount(_centerPage, widget.controller.maxItems);
     _centerIndex = _itemCount ~/ 2;

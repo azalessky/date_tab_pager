@@ -49,7 +49,7 @@ class _PeriodTabBarState extends State<PeriodTabBar>
   void initState() {
     super.initState();
 
-    _centerPage = widget.adapter.pageDate(widget.controller.position);
+    _centerPage = widget.adapter.pageStart(widget.controller.position);
     _pageCount =
         widget.adapter.pageCount(_centerPage, widget.controller.maxItems);
     _centerIndex = _pageCount ~/ 2;
@@ -113,7 +113,7 @@ class _PeriodTabBarState extends State<PeriodTabBar>
     final tabController = _initTabController(pageIndex, pageDate);
     final tabCount = widget.adapter.pageSize(pageDate);
     final isSelected =
-        pageDate == widget.adapter.pageDate(widget.controller.position);
+        pageDate == widget.adapter.pageStart(widget.controller.position);
 
     return TabBar(
       controller: tabController,
