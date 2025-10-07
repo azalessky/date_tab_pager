@@ -1,3 +1,6 @@
+## 0.0.4
+ - Expose position changes from PositionController.
+
 ## 0.0.3
  - Fix calculation in WeeklyTabBar.
 

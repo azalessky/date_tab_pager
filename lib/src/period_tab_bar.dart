@@ -55,7 +55,7 @@ class _PeriodTabBarState extends State<PeriodTabBar>
     _centerIndex = _pageCount ~/ 2;
     _pageController = PageController(initialPage: _centerIndex);
 
-    widget.controller.addListener(_updateFromContoller);
+    widget.controller.addListener(_updateFromController);
     widget.sync.viewPosition.addListener(_updateFromView);
     widget.sync.viewOffset.addListener(_syncTabOffset);
   }
@@ -66,7 +66,7 @@ class _PeriodTabBarState extends State<PeriodTabBar>
     _tabControllers.forEach((_, c) => c.dispose());
     _tabControllers.clear();
 
-    widget.controller.removeListener(_updateFromContoller);
+    widget.controller.removeListener(_updateFromController);
     widget.sync.viewPosition.removeListener(_updateFromView);
     widget.sync.viewOffset.removeListener(_syncTabOffset);
 
@@ -130,7 +130,7 @@ class _PeriodTabBarState extends State<PeriodTabBar>
       ),
       onTap: (index) => setState(() {
         final date = widget.adapter.subIndexToDate(pageDate, index);
-        widget.controller.setPosition(date);
+        widget.controller.setPosition(date, true);
         widget.sync.barPosition.value = date;
         widget.onTabChanged?.call(date);
       }),
@@ -155,8 +155,10 @@ class _PeriodTabBarState extends State<PeriodTabBar>
     _updatePosition(false);
   }
 
-  void _updateFromContoller() {
-    _updatePosition(true);
+  void _updateFromController() {
+    if (!widget.controller.isInternalUpdate) {
+      _updatePosition(true);
+    }
   }
 
   void _updatePosition(bool animate) {

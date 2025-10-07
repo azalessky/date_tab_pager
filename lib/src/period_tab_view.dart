@@ -53,7 +53,7 @@ class _PeriodTabViewState extends State<PeriodTabView>
     _tabController.addListener(_syncTabIndex);
     _tabController.animation?.addListener(_syncTabOffset);
 
-    widget.controller.addListener(_updatePosition);
+    widget.controller.addListener(_updateFromController);
     widget.sync.barPosition.addListener(_updatePosition);
   }
 
@@ -84,6 +84,12 @@ class _PeriodTabViewState extends State<PeriodTabView>
     );
   }
 
+  void _updateFromController() {
+    if (!widget.controller.isInternalUpdate) {
+      _updatePosition();
+    }
+  }
+
   void _updatePosition() {
     final pageIndex =
         widget.adapter.dateToIndex(_centerPage, widget.controller.position);
@@ -103,7 +109,7 @@ class _PeriodTabViewState extends State<PeriodTabView>
     final date = widget.adapter.indexToDate(_centerPage, index);
 
     if (widget.controller.position != date) {
-      widget.controller.setPosition(date);
+      widget.controller.setPosition(date, true);
       widget.sync.viewPosition.value = date;
       widget.onPageChanged?.call(date);
     }

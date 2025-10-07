@@ -8,6 +8,7 @@ class PositionController extends ChangeNotifier {
   final List<int> _weekdays;
   final int _maxItems;
   DateTime _position;
+  bool _internalUpdate = false;
 
   /// Creates a [PositionController].
   /// [position] is the initial date position.
@@ -30,14 +31,20 @@ class PositionController extends ChangeNotifier {
   /// Maximum number of items visible in the view.
   int get maxItems => _maxItems;
 
+  /// True if the last position change was triggered internally
+  bool get isInternalUpdate => _internalUpdate;
+
   /// Animates to the specified [date] and notifies listeners.
   void animateTo(DateTime date) {
-    setPosition(date.safeDate(_weekdays));
-    notifyListeners();
+    setPosition(date.safeDate(_weekdays), false);
   }
 
-  /// Sets the current position to [date] without notifying listeners.
-  void setPosition(DateTime date) {
+  /// Sets the current position to [date] with a flag indicating source of update.
+  void setPosition(DateTime date, bool internal) {
     _position = date;
+    _internalUpdate = internal;
+
+    notifyListeners();
+    Future.microtask(() => _internalUpdate = false);
   }
 }
