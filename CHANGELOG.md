@@ -1,6 +1,7 @@
 ## 0.0.5
  - Fix disposing listener in DailyTabView/WeeklyTabView.
-
+ - Refactor date calculations.
+ 
 ## 0.0.4
  - Expose position changes from PositionController.
 
