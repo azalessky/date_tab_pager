@@ -12,6 +12,10 @@ extension DateTimeExtension on DateTime {
     return start.add(Duration(days: delta));
   }
 
+  bool isSameDay(DateTime other) {
+    return year == other.year && month == other.month && day == other.day;
+  }
+
   bool isSameWeek(DateTime other) =>
       DateTime(year, month, day - weekday) ==
       DateTime(other.year, other.month, other.day - other.weekday);

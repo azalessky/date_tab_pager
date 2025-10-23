@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'data_types.dart';
+import 'date_time_extension.dart';
 import 'period_adapter.dart';
 import 'position_controller.dart';
 import 'sync_controller.dart';
@@ -112,8 +113,8 @@ class _PeriodTabBarState extends State<PeriodTabBar>
         widget.adapter.pageToDate(_centerPage, pageIndex - _centerIndex);
     final tabController = _initTabController(pageIndex, pageDate);
     final tabCount = widget.adapter.pageSize(pageDate);
-    final isSelected =
-        pageDate == widget.adapter.pageStart(widget.controller.position);
+    final isSelected = pageDate
+        .isSameDay(widget.adapter.pageStart(widget.controller.position));
 
     return TabBar(
       controller: tabController,
@@ -131,7 +132,7 @@ class _PeriodTabBarState extends State<PeriodTabBar>
       onTap: (index) => setState(() {
         final date = widget.adapter.subIndexToDate(pageDate, index);
         widget.controller.setPosition(date, true);
-        widget.sync.barPosition.value = date;
+        widget.sync.barPosition.notify();
         widget.onTabChanged?.call(date);
       }),
     );

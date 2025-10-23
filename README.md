@@ -36,7 +36,7 @@ Add the following line to `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  date_tab_pager: ^0.0.4
+  date_tab_pager: ^0.0.5
 ```
 Import the package in your code:
 ```dart
