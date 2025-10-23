@@ -4,10 +4,10 @@ import 'sync_notifiers.dart';
 /// Holds [barPosition], [viewPosition], and [viewOffset] notifiers to allow
 /// reactive updates when the tab bar or tab view changes.
 class SyncController {
-  /// The current date position of the tab bar.
+  /// Notifies when the tab bar position changes.
   final VoidNotifier barPosition;
 
-  /// The current date position of the tab view.
+  /// Notifies when the tab view position changes.
   final VoidNotifier viewPosition;
 
   /// The current scroll offset of the tab view.
