@@ -5,7 +5,7 @@ extension DateTimeExtension on DateTime {
   }
 
   DateTime monthStart(List<int> weekdays) {
-    final start = DateTime(year, month);
+    final start = DateTime.utc(year, month);
     int delta = (weekdays.first - start.weekday + 7) % 7;
     return start.add(Duration(days: delta));
   }
@@ -15,8 +15,8 @@ extension DateTimeExtension on DateTime {
   }
 
   bool isSameWeek(DateTime other) =>
-      DateTime(year, month, day - weekday) ==
-      DateTime(other.year, other.month, other.day - other.weekday);
+      DateTime.utc(year, month, day - weekday) ==
+      DateTime.utc(other.year, other.month, other.day - other.weekday);
 
   int differenceInWeeks(DateTime other) {
     final diff = differenceInDays(other);
@@ -28,21 +28,18 @@ extension DateTimeExtension on DateTime {
   }
 
   int differenceInDays(DateTime other) {
-    DateTime start = DateTime(year, month, day);
-    DateTime end = DateTime(other.year, other.month, other.day);
+    DateTime start = DateTime.utc(year, month, day);
+    DateTime end = DateTime.utc(other.year, other.month, other.day);
     return start.difference(end).inDays;
   }
 
   DateTime safeDate(List<int> weekdays) {
-    final date = DateTime(year, month, day);
-    final weekday = date.weekday;
-
     final next = weekdays.firstWhere(
       (d) => d >= weekday,
       orElse: () => weekdays.first,
     );
 
     final delta = (next - weekday + 7) % 7;
-    return date.add(Duration(days: delta));
+    return DateTime.utc(year, month, day + delta);
   }
 }

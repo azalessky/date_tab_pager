@@ -15,7 +15,7 @@ class WeeklyAdapter implements PeriodAdapter {
 
   @override
   DateTime pageToDate(DateTime base, int page) =>
-      DateTime(base.year, base.month + page).monthStart(weekdays);
+      DateTime.utc(base.year, base.month + page).monthStart(weekdays);
 
   @override
   int dateToPage(DateTime base, DateTime date) {
