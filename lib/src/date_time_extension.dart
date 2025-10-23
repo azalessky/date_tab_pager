@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 extension DateTimeExtension on DateTime {
   DateTime weekStart(List<int> weekdays) {
     int delta = (weekday - weekdays.first + 7) % 7;
@@ -30,25 +28,21 @@ extension DateTimeExtension on DateTime {
   }
 
   int differenceInDays(DateTime other) {
-    final from = DateTime(year, month, day);
-    final to = DateTime(other.year, other.month, other.day);
-    return (from.difference(to).inHours / 24).round();
+    DateTime start = DateTime(year, month, day);
+    DateTime end = DateTime(other.year, other.month, other.day);
+    return start.difference(end).inDays;
   }
 
   DateTime safeDate(List<int> weekdays) {
     final date = DateTime(year, month, day);
-    int min = weekdays.reduce(math.min);
-    int max = weekdays.reduce(math.max);
-    int weekday = date.weekday;
+    final weekday = date.weekday;
 
-    if (weekday < min) {
-      return date.add(Duration(days: min - weekday));
-    } else if (weekday > max) {
-      return date.add(Duration(days: min - weekday + 7));
-    } else if (!weekdays.contains(weekday)) {
-      int next = weekdays.where((e) => e > weekday).first;
-      return date.add(Duration(days: next - weekday));
-    }
-    return date;
+    final next = weekdays.firstWhere(
+      (d) => d >= weekday,
+      orElse: () => weekdays.first,
+    );
+
+    final delta = (next - weekday + 7) % 7;
+    return date.add(Duration(days: delta));
   }
 }
